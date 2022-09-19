@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+from recipes.initcmds import *
 from .views import *
+
+app_name = "gestione"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,3 +29,6 @@ urlpatterns = [
 
     # path('gestione/', include('gestione.urls'))
 ]
+
+# erase_db()
+init_db()
