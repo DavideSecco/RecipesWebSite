@@ -25,10 +25,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('home/', home_page_views.as_view(), name='homepage'),
 
-
-
     # path('gestione/', include('gestione.urls'))
 ]
 
-# erase_db()
+erase_db()
 init_db()
