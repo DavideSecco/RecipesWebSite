@@ -21,4 +21,7 @@ from gestione import views
 urlpatterns = [
     path("crea_ricetta/", views.CreateRicettaView.as_view(), name="crearicetta"),
     path("lista_ricette/", Lista_ricette_views.as_view(), name="listaricette"),
+    path("ricetta/<pk>/", views.DetailRicettaView.as_view(), name="ricetta"),
+    path("update_ricetta/<pk>/", views.UpdateRicettaView.as_view(), name="updatericetta"),
+    path("cancella_ricetta/<pk>/", views.DeleteRicettaView.as_view(), name="deletericetta"),
 ]

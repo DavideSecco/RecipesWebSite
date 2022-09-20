@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1> Cancellazione della Ricetta </h1>
+
+    <br>
+
+    <form method="post">{% csrf_token %}
+        <p>Sicuro di voler cancellare "{{ object }}"?</p>
+        <input type="submit" value="Conferma">
+    </form>
+
+{% endblock %}
