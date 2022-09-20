@@ -16,3 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
+from gestione import views
+
+urlpatterns = [
+    path("crea_ricetta/", views.CreateRicettaView.as_view(), name="crearicetta"),
+    path("lista_ricette/", Lista_ricette_views.as_view(), name="listaricette"),
+]

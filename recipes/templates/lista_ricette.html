@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for ricetta in object_list %}
+        <ul>
+            {{ ricetta }} {{ ricetta.costo }}
+        </ul>
+    {% endfor %}
+    
+    <p> il numero totale di ricette é {{ view.get_totale_ricette }} </p>
+ 
+{% endblock %}

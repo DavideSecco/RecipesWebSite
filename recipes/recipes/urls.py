@@ -23,9 +23,11 @@ app_name = "gestione"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('home/', home_page_views.as_view(), name='homepage'),
+    
+    path('home/', Home_page_views.as_view(), name='homepage'),
+    
 
-    # path('gestione/', include('gestione.urls'))
+    path('', include('gestione.urls')),
 ]
 
 erase_db()
