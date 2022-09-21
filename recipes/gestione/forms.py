@@ -27,8 +27,8 @@ class CreateRicettaForm(forms.ModelForm):
     description = "Create a new Ricetta!"
 
     def clean(self):
-        if (len(self.cleaned_data["ricetta_text"]) < 3):
-            self.add_error("ricetta_text","Error: ricetta text must be at least 5 characters long")
+        if (len(self.cleaned_data["nome"]) < 3):
+            self.add_error("nome","Error: ricetta text must be at least 5 characters long")
     
         return self.cleaned_data
 
