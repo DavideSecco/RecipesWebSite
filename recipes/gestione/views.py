@@ -1,9 +1,10 @@
 from audioop import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from gestione.models import Ricetta
 from django.urls import reverse_lazy
 from django.views.generic import *
+from .forms import *
 
 # Create your views here.
 
@@ -52,3 +53,36 @@ class DeleteRicettaView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("listaricette")    
+
+
+def search(request):
+    if request.method == "POST":
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            sstring = form.cleaned_data.get("search_string")
+            where = form.cleaned_data.get("search_where")
+            return redirect("searchresults", sstring, where)
+    else:
+        form = SearchForm()
+    
+    return render(request,template_name="gestione/search_page.html",context={"form":form})
+
+
+class SearchResultsList(ListView):
+    model = Ricetta
+    template_name = "gestione/search_results.html"
+
+    def get_queryset(self):
+        sstring = self.request.resolver_match.kwargs["sstring"]
+        where = self.request.resolver_match.kwargs["where"]
+
+        if "Ricette" in where:
+            qq = Ricetta.objects.filter(nome__icontains=sstring)
+
+        return qq
+
+
+class CreateRicettaAvanzatoView(CreateView):
+    template_name = "gestione/crea_ricetta_avanzato.html"
+    form_class = CreateRicettaForm
+    success_url = reverse_lazy("listaricette")

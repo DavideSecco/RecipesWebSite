@@ -12,12 +12,14 @@
 <div class="topnav">
   <a href="{% url 'homepage' %}">Home</a>
   <a href="{% url 'listaricette' %}">Lista di tutte le ricette</a>
-  <a href="#">Link</a>
+  <a href="{% url 'search' %}">Cerca</a>
 </div>
 
-{% block content %}
+<content>
+  {% block content %}
 
-{% endblock %}
+  {% endblock %}
+</content>
 
 <div class="footer">
   <p>Footer</p>

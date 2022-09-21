@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %} {{ view.form_class.description }} {% endblock %}
+
+{% block content %}
+
+<h1> {{ view.form_class.description }} </h1>
+
+<form method="POST"> {% csrf_token %}
+    {{form.as_p}}
+
+    <input type="submit" value="Create">
+</form>
+
+{% endblock %}

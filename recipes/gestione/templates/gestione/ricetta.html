@@ -2,11 +2,19 @@
 
 {% block content %}
 
-    <h1> Dettagli di {{object.nome}} </h1>
+    <h1> {{object.nome}} </h1>
+    
+    {% load static %}<img src="{% static '/img/immagine_di_prova.jpg' %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
+    <ul>
+        <li> Difficoltá: {{ object.difficoltá }} </li>
+        <li> Regime alimentare: {{ object.regime_alimentare }}</li>
+        <li> Portata: {{ object.portata }} </li>
+        <li> Costo: {{ object.costo }} € </li>
+        <li> Tempo di preparazione: {{ object.tempo_preparazione }} min </li>
+        <li> Tempo di cottura: {{ object.tempo_cottura }} min </li>
+        <li> Porzioni: {{ object.porzioni }} </li>
+    </ul>
 
-    <br>
-
-    <li> {{ object.nome }} </li>
-    <li> {{ object.costo }} </li>
+    <h3> Preparazione </h3>
 
 {% endblock %}

@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from re import search
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
@@ -24,4 +25,9 @@ urlpatterns = [
     path("ricetta/<pk>/", views.DetailRicettaView.as_view(), name="ricetta"),
     path("update_ricetta/<pk>/", views.UpdateRicettaView.as_view(), name="updatericetta"),
     path("cancella_ricetta/<pk>/", views.DeleteRicettaView.as_view(), name="deletericetta"),
+    
+    path("seach/", search, name="search"),
+    path("searchresults/<str:sstring>/<str:where>/", views.SearchResultsList.as_view(), name="searchresults"),
+
+    path("crea_ricetta_avanzato/", views.CreateRicettaAvanzatoView.as_view(), name="crearicettaavanzato")
 ]
