@@ -81,7 +81,10 @@ class SearchResultsList(ListView):
 
         return qq
 
-
+"""
+oltre al poter sostituire CreateRicetta con questo
+potresti sostituire anche UpdateRicetta, esattamente nello stesso modo (video anno scorso 20210506-django-intermediate-P1URL)
+"""
 class CreateRicettaAvanzatoView(CreateView):
     template_name = "gestione/crea_ricetta_avanzato.html"
     form_class = CreateRicettaForm
