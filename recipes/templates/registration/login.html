@@ -1,0 +1,24 @@
+<!-- E' obbligatorio che questa pagine si trovi qui e si chiami cosi -->
+
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %} 
+    <h1> Pagina per il login </h1>
+
+    {% if "notok" in request.GET.auth %}
+        <div class="alert alert-danger" role="alert">
+        Si è arrivati qui in quanto non si dispone dei permessi necessari per il servizio scelto!
+        </div>
+    {% endif %}
+
+    <form method="post"> {% csrf_token %}
+
+    {{form | crispy}}
+    
+    <input type="submit" class="btn btn-success" value="Esegui login">
+    
+    </form>
+
+{% endblock %}
