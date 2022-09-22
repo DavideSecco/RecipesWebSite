@@ -17,4 +17,12 @@
 
     <h3> Preparazione </h3>
 
+    <br>
+
+    {{ object.id }}
+
+   <a href="{% url 'ricetta' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta </a>
+
+   <a href="{% url 'updatericetta' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta </a>
+
 {% endblock %}

@@ -19,12 +19,17 @@ from django.urls import path, include
 from recipes.initcmds import *
 from .views import *
 
+from django.contrib.auth import views as auth_views
+
 app_name = "gestione"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    
     path('home/', Home_page_views.as_view(), name='homepage'),
+    
+    path("register/", UserCreateView.as_view(), name="register"),
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     
 
     path('', include('gestione.urls')),

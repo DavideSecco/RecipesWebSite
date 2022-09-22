@@ -18,17 +18,15 @@ class Lista_ricette_views(ListView):
             count = count + 1
         return count 
 
-
-class CreateRicettaView(CreateView):
-    model = Ricetta
-    template_name = "gestione/crea_ricetta.html"
-    fields = "__all__" # i campi che voglio rendere editabili dall'utente
+""" Potresti sostituire UpdateRicetta, esattamente nello stesso modo (video anno scorso 20210506-django-intermediate-P1URL) """
+class CreateRicettaAvanzatoView(CreateView):
+    template_name = "gestione/crea_ricetta_avanzato.html"
+    form_class = CreateRicettaForm
     success_url = reverse_lazy("listaricette")
-
 
 class DetailRicettaView(DetailView):
     model = Ricetta
-    template_name = "gestione/ricetta.html"
+    template_name = "gestione/ricetta_details.html"
 
 
 class UpdateRicettaView(UpdateView):
@@ -81,11 +79,3 @@ class SearchResultsList(ListView):
 
         return qq
 
-"""
-oltre al poter sostituire CreateRicetta con questo
-potresti sostituire anche UpdateRicetta, esattamente nello stesso modo (video anno scorso 20210506-django-intermediate-P1URL)
-"""
-class CreateRicettaAvanzatoView(CreateView):
-    template_name = "gestione/crea_ricetta_avanzato.html"
-    form_class = CreateRicettaForm
-    success_url = reverse_lazy("listaricette")
