@@ -11,9 +11,9 @@ class Home_page_views(TemplateView):
     template_name = "home.html"
 
 class UserCreateView(CreateView):
-    form_class: UserCreationForm
-    template_name: "user_create.html"
-    success_url: reverse_lazy("login")
+    form_class= UserCreationForm
+    template_name= "user_create.html"
+    success_url= reverse_lazy("login")
 
 
 # Da qui in poi forse la sposterai
