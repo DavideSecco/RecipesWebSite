@@ -15,11 +15,13 @@
         <li> Porzioni: {{ object.porzioni }} </li>
     </ul>
 
+    Id della ricetta: {{ object.id }}
+
     <h3> Preparazione </h3>
 
     <br>
 
-    Id della ricetta: {{ object.id }}
-
     <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato</a>
+    <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
+
 {% endblock %}
