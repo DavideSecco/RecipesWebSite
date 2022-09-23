@@ -14,7 +14,7 @@ class Ricetta(models.Model):
     tempo_preparazione = models.CharField(default="20", max_length=5)
     tempo_cottura = models.CharField(default="10", max_length=4)
     porzioni = models.IntegerField(default=50)
-    utente = models.ForeignKey(User, on_delete = models.PROTECT, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
+    utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
 
     def __str__(self):
         out = self.nome

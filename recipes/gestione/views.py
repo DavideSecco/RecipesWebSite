@@ -1,4 +1,5 @@
 from audioop import reverse
+from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 
@@ -37,7 +38,11 @@ class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
     model = Ricetta
     template_name = "gestione/crea_ricetta_avanzato.html"
     form_class = CreateRicettaForm
-    success_url = reverse_lazy("listaricette")
+    success_url = reverse_lazy("listaricette") 
+
+    def form_valid(self, form):
+        form.instance.utente = self.request.user
+        return super().form_valid(form)
 
 
 class UpdateRicettaAvanzatoView(UpdateView):
