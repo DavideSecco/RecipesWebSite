@@ -34,5 +34,5 @@ urlpatterns = [
     path('', include('gestione.urls')),
 ]
 
-erase_db()
-init_db()
+# erase_db()
+# init_db()
