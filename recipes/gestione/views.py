@@ -1,10 +1,12 @@
 from audioop import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.models import User
 
 from gestione.models import Ricetta
 from django.urls import reverse_lazy
 from django.views.generic import *
 from .forms import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
@@ -18,8 +20,21 @@ class Lista_ricette_views(ListView):
             count = count + 1
         return count 
 
-""" Potresti sostituire UpdateRicetta, esattamente nello stesso modo (video anno scorso 20210506-django-intermediate-P1URL) """
-class CreateRicettaAvanzatoView(CreateView):
+
+class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
+    model = Ricetta
+    template_name = "lista_ricette.html"
+
+    def get_queryset(self):
+        print("request = " + self.request.user.username)
+        print("prova")
+        print(self.request.user)
+        Data = Ricetta.objects.filter(utente = self.request.user)
+        return Data
+
+    
+class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
+    model = Ricetta
     template_name = "gestione/crea_ricetta_avanzato.html"
     form_class = CreateRicettaForm
     success_url = reverse_lazy("listaricette")

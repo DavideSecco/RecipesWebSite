@@ -13,6 +13,7 @@
         <li> Tempo di preparazione: {{ object.tempo_preparazione }} min </li>
         <li> Tempo di cottura: {{ object.tempo_cottura }} min </li>
         <li> Porzioni: {{ object.porzioni }} </li>
+        <li> Autore: {{ object.utente }} </li>
     </ul>
 
     Id della ricetta: {{ object.id }}
@@ -21,7 +22,13 @@
 
     <br>
 
-    <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato</a>
-    <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
+    user.id = {{ user.id}} <br>
+    user.username = '{{user.username}}' <br>
+    object.utente = '{{object.utente}}'
 
+    <!-- Questo if é troppo poco, devo controllare che l'utente sia lo stesso proprietario della ricetta -->
+    {% if request.user.username == object.utente %} 
+        <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato</a>
+        <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
+    {% endif %}
 {% endblock %}

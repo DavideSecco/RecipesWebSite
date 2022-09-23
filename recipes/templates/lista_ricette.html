@@ -10,18 +10,16 @@
                     Border="0">
                     <h2> {{ ricetta }} </h2> 
                     <ul>
-                        <li>Difficoltà: {{ ricetta.difficoltá }}</li>
-                        <li>Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
+                        <li> Difficoltà: {{ ricetta.difficoltá }}</li>
+                        <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
+                        <li> Proprietario: {{ ricetta.utente }} </li>
                     </ul>
                 </a> 
             </articole>
         </ul>
     {% endfor %}
     
-    
     <p> il numero totale di ricette é {{ view.get_totale_ricette }} </p>
 
-    
- 
 {% endblock %}
 

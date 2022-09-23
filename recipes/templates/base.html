@@ -16,10 +16,9 @@
   <a href="{% url 'search' %}">Cerca</a>
   <a href="{% url 'crearicettaavanzato' %}">Crea ricetta Avanzato</a>
   
-  
-  
-  {% if user.is_authenticated and "ok" in request.GET.login  %} 
+  {% if user.is_authenticated %} 
     <a href="{% url 'logout' %}"> {{user.username }} <br> Logout </a>
+    <a href="{% url 'listaricetteprivate' %}"> Lista ricette personali </a>
   {% else %}
     <a href="{% url 'login' %}"> Login </a>
     <a href="{% url 'register' %}"> Registrati </a>
