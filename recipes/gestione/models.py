@@ -36,10 +36,11 @@ class Ricetta(models.Model):
         verbose_name_plural = "Ricette"
 
 
-class Ingrediente(models.Model):
+class Ingredient(models.Model):
     nome = models.CharField(max_length=50)
-    calorie = models.IntegerField()
-    unità_di_misura = models.CharField(default="grammi")
+    quantitá = models.IntegerField()
+
+    ricetta = models.ForeignKey(Ricetta, on_delete=models.CASCADE, related_name="ingredients")
 
     def __str__(self):
         return self.nome
@@ -48,11 +49,5 @@ class Ingrediente(models.Model):
         verbose_name_plural = "Ingredienti"
 
 
-class Ricetta_Ingrediente(models.Model):
-    ingrediente = models.ForeignKey(Ingrediente, on_delete = models.CASCADE, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
-    ricetta = models.ForeignKey(Ricetta, on_delete = models.CASCADE, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
-    quantità = models.IntegerField()
-
-    
 
     

@@ -1,6 +1,8 @@
+from dataclasses import field
 from django import forms
 
-from gestione.models import Ricetta
+from gestione.models import Ricetta, Ingredient
+from django.forms import formset_factory
 
 
 class SearchForm(forms.Form):
@@ -36,3 +38,22 @@ class CreateRicettaForm(forms.ModelForm):
     class Meta:
         model = Ricetta
         exclude = ["utente",]
+
+
+class IngredientForm(forms.ModelForm):
+        
+    class Meta:
+        model = Ingredient
+        exclude = ('ricetta',)
+
+"""
+IngredientFormSet = forms.inlineformset_factory(Ricetta, Ingredient, form=IngredientForm)
+# IngredientFormSet = formset_factory(Ingredient, formset=IngredientForm)
+data = {
+    'form-TOTAL_FORMS': '1501',
+    'form-INITIAL_FORMS': '2',
+    'form-MIN_NUM_FORMS': '2'
+}
+formset = IngredientFormSet(data) 
+formset.is_valid()
+"""

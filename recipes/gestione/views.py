@@ -27,9 +27,6 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
     template_name = "lista_ricette.html"
 
     def get_queryset(self):
-        print("request = " + self.request.user.username)
-        print("prova")
-        print(self.request.user)
         Data = Ricetta.objects.filter(utente = self.request.user)
         return Data
 
@@ -38,7 +35,10 @@ class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
     model = Ricetta
     template_name = "gestione/crea_ricetta_avanzato.html"
     form_class = CreateRicettaForm
-    success_url = reverse_lazy("listaricette") 
+
+    def get_success_url(self):
+        pk = self.get_context_data()["object"].pk
+        return reverse_lazy("aggiungiingredienti",kwargs={'pk': pk})
 
     def form_valid(self, form):
         form.instance.utente = self.request.user
@@ -49,11 +49,22 @@ class UpdateRicettaAvanzatoView(UpdateView):
     template_name = "gestione/update_ricetta_avanzato.html"
     form_class = CreateRicettaForm
     model = Ricetta
-    # success_url = reverse_lazy("listaricette")
 
     def get_success_url(self):
         pk = self.get_context_data()["object"].pk
         return reverse_lazy("ricetta",kwargs={'pk': pk})
+
+class AggiungiIngredientiView(CreateView):
+    model = Ingredient
+    template_name = "gestione/aggiungi_ingredienti.html"
+    form_class = IngredientForm
+    success_url = reverse_lazy("listaricette") 
+
+    def form_valid(self, form):
+        ricetta_id = self.request.resolver_match.kwargs["pk"]
+        form.instance.ricetta = Ricetta.objects.get(id = ricetta_id)
+        return super().form_valid(form)
+    
 
 class DetailRicettaView(DetailView):
     model = Ricetta

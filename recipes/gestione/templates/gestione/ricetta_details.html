@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1> {{object.nome}} </h1>
-    
+
     {% load static %}<img src="{% static '/img/immagine_di_prova.jpg' %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
     <ul>
         <li> Difficoltá: {{ object.difficoltá }} </li>
@@ -20,15 +20,9 @@
 
     <h3> Preparazione </h3>
 
-    <br>
-
-    user.id = {{ user.id}} <br>
-    user.username = '{{user.username}}' <br>
-    object.utente = '{{object.utente}}'
-
-    <!-- Questo if é troppo poco, devo controllare che l'utente sia lo stesso proprietario della ricetta -->
-    {% if request.user.username == object.utente %} 
-        <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato</a>
+    {% if user.username  == object.utente.username %}
+        <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato </a>
         <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
     {% endif %}
+
 {% endblock %}
