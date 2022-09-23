@@ -24,20 +24,20 @@ class CreateRicettaAvanzatoView(CreateView):
     form_class = CreateRicettaForm
     success_url = reverse_lazy("listaricette")
 
-class DetailRicettaView(DetailView):
-    model = Ricetta
-    template_name = "gestione/ricetta_details.html"
 
-
-class UpdateRicettaView(UpdateView):
+class UpdateRicettaAvanzatoView(UpdateView):
+    template_name = "gestione/update_ricetta_avanzato.html"
+    form_class = CreateRicettaForm
     model = Ricetta
-    template_name = "gestione/update_ricetta.html"
-    fields = "__all__"
     # success_url = reverse_lazy("listaricette")
 
     def get_success_url(self):
         pk = self.get_context_data()["object"].pk
         return reverse_lazy("ricetta",kwargs={'pk': pk})
+
+class DetailRicettaView(DetailView):
+    model = Ricetta
+    template_name = "gestione/ricetta_details.html"
 
 
 class DeleteRicettaView(DeleteView):

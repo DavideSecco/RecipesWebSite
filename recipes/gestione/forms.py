@@ -24,15 +24,15 @@ specificato.
 
 class CreateRicettaForm(forms.ModelForm):
     
-    description = "Create a new Ricetta!"
+    description_create = "Create a new Ricetta!"
+    description_update = "Update a Ricetta!"
 
-    def clean(self):
-        if (len(self.cleaned_data["nome"]) < 3):
-            self.add_error("nome","Error: ricetta text must be at least 5 characters long")
+    #def clean(self):
+        #if (len(self.cleaned_data["nome"]) < 3):
+        #    self.add_error("nome","Error: ricetta text must be at least 5 characters long")
     
-        return self.cleaned_data
+        #return self.cleaned_data
 
     class Meta:
         model = Ricetta
-        fields = ("__all__")
-
+        exclude = ["utente",]

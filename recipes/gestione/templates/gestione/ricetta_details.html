@@ -19,10 +19,7 @@
 
     <br>
 
-    {{ object.id }}
+    Id della ricetta: {{ object.id }}
 
-   <a href="{% url 'ricetta' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta </a>
-
-   <a href="{% url 'updatericetta' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta </a>
-
+    <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato</a>
 {% endblock %}

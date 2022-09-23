@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %} {{ view.form_class.description }} {% endblock %}
+{% block title %} {{ view.form_class.description_create }} {% endblock %}
 
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-    <h1> {{ view.form_class.description }} </h1>
+    Qusto é il file "crea_ricetta_avanzato.html"
+    <h1> {{ view.form_class.description_create }} </h1>
 
     <form method="POST"> {% csrf_token %}
         {{form|crispy}}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} {{ view.form_class.description_update }} {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    Questo é il file "update_ricetta_avanzato.html"
+    <h1> {{ view.form_class.description_update }} </h1>
+
+    <form method="POST"> {% csrf_token %}
+        {{form|crispy}}
+
+        <input type="submit" value="Modify">
+    </form>
+
+{% endblock %}
