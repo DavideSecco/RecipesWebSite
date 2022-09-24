@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <form method= "POST">
+        {% csrf_token %}
+        {{ formset.as_p }}
+        <Button type="submit"> Save </button>
+    </form>    
+{% endblock %}

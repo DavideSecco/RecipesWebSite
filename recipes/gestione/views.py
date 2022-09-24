@@ -3,11 +3,12 @@ from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 
-from gestione.models import Ricetta
 from django.urls import reverse_lazy
 from django.views.generic import *
 from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import modelformset_factory
+from .models import *
 
 # Create your views here.
 
@@ -37,8 +38,8 @@ class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
     form_class = CreateRicettaForm
 
     def get_success_url(self):
-        pk = self.get_context_data()["object"].pk
-        return reverse_lazy("aggiungiingredienti",kwargs={'pk': pk})
+        ricetta_id = self.get_context_data()["object"].pk
+        return reverse_lazy("aggiungiingredienti",kwargs={'ricetta_id': ricetta_id})
 
     def form_valid(self, form):
         form.instance.utente = self.request.user
@@ -110,3 +111,21 @@ class SearchResultsList(ListView):
 
         return qq
 
+# Per aggiungere ingredienti dinamicamente a una ricetta
+# https://www.youtube.com/watch?v=JIvJL1HizP4
+def aggiungiIngredientiAvanzato(request, ricetta_id):
+    ricetta = Ricetta.objects.get(pk=ricetta_id)
+    IngredientFormSet = modelformset_factory(Ingredient, fields=("nome", "quantitá"))
+    
+    if request.method == "POST":
+        formset = IngredientFormSet(request.POST, queryset=Ingredient.objects.filter(ricetta__id=ricetta_id))
+        if formset.is_valid():
+            instances = formset.save(commit=False)
+            for instance in instances:
+                instance.ricetta_id = ricetta.id
+                instance.save()
+
+        return redirect('aggiungiingredienti', ricetta_id = ricetta.id)
+
+    formset = IngredientFormSet(queryset=Ingredient.objects.filter(ricetta__id=ricetta_id))
+    return render(request, 'gestione/ingredienti_avanzato.html', {'formset': formset})

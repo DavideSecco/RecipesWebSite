@@ -57,3 +57,7 @@ data = {
 formset = IngredientFormSet(data) 
 formset.is_valid()
 """
+
+IngredientFormSet = formset_factory(IngredientForm, extra=2)
+#for form in IngredientFormSet:
+ #   print(form.as_table())
