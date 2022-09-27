@@ -20,22 +20,21 @@ from .views import *
 from gestione import views
 
 urlpatterns = [
+    # LISTA RICETTE
     path("lista_ricette/", Lista_ricette_views.as_view(), name="listaricette"),
-
-    path("ricetta/<pk>/", views.DetailRicettaView.as_view(), name="ricetta"),
-    path("cancella_ricetta/<pk>/", views.DeleteRicettaView.as_view(), name="deletericetta"),
-    
-    path("seach/", search, name="search"),
-    path("searchresults/<str:sstring>/<str:where>/", views.SearchResultsList.as_view(), name="searchresults"),
-
-    path("crea_ricetta_avanzato/", views.CreateRicettaAvanzatoView.as_view(), name="crearicettaavanzato"),
-    # path("aggiunti_ingredienti/<pk>/", views.AggiungiIngredientiView.as_view(), name="aggiungiingredienti"),
-    # path("update_ricetta_avanzato/<pk>/", views.UpdateRicettaAvanzatoView.as_view(), name="updatericettaavanzato"),
-    path("update_ricetta_avanzato/<pk>/", views.ricetta_update_view, name="updatericettaavanzato"),
-
     path("lista_ricette_private/", views.ListaRicettePrivateViews.as_view(), name="listaricetteprivate"),
 
-    # Versione avanzata
-    path("aggiunti_ingredienti/<ricetta_id>/", views.aggiungiIngredientiAvanzato, name="aggiungiingredienti"),
+    # DETAIL RICETTA
+    path("ricetta/<pk>/", views.DetailRicettaView.as_view(), name="ricetta"),
+    
+    # CREATE & UPDATE
+    path("crea_ricetta_avanzato/", views.ricetta_create_view, name="crearicettaavanzato"),
+    path("update_ricetta_avanzato/<pk>/", views.ricetta_update_view, name="updatericettaavanzato"),
 
+    # DELETE
+    path("cancella_ricetta/<pk>/", views.DeleteRicettaView.as_view(), name="deletericetta"),
+    
+    # RICERCA E RISULTATI RICERCA
+    path("seach/", search, name="search"),
+    path("searchresults/<str:sstring>/<str:where>/", views.SearchResultsList.as_view(), name="searchresults"),
 ]

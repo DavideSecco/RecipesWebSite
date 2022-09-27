@@ -1,5 +1,6 @@
 from audioop import reverse
 from multiprocessing import context
+# from typing_extensions import Required
 from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
@@ -14,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+# Lista ricetta pubbliche e private:
 class Lista_ricette_views(ListView):
     model = Ricetta
     template_name = "lista_ricette.html"
@@ -24,7 +26,6 @@ class Lista_ricette_views(ListView):
             count = count + 1
         return count 
 
-
 class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
     model = Ricetta
     template_name = "lista_ricette.html"
@@ -33,7 +34,15 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
         Data = Ricetta.objects.filter(utente = self.request.user)
         return Data
 
-    
+
+# DETAIL RICETTA: da aggionare e mostrare anche gli ingredienti
+class DetailRicettaView(DetailView):
+    model = Ricetta
+    template_name = "gestione/ricetta_details.html"
+
+
+# CREATE & UPDATE: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
+# Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
 class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
     model = Ricetta
     template_name = "gestione/crea_ricetta_avanzato.html"
@@ -47,18 +56,36 @@ class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
         form.instance.utente = self.request.user
         return super().form_valid(form)
 
+@login_required
+def ricetta_create_view(request):
+    form = RicettaForm(request.POST or None)
+    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", ), extra=1)
 
-class UpdateRicettaAvanzatoView(LoginRequiredMixin, UpdateView):
-    template_name = "gestione/update_ricetta_avanzato.html"
-    form_class = RicettaForm
-    model = Ricetta
+    if request.method == "POST":
+        if 'save' in request.POST:
+            if form.is_valid():
+                obj = form.save(commit = False)
+                obj.utente = request.user
+                obj.save()
+                formset = IngredientFormSet(request.POST, instance=form.instance)
+                if formset.is_valid():
+                    formset.save()
+                
+            print("Ho eseguito il metodo post")
+            return redirect('updatericettaavanzato', pk = obj.id)
+        else:
+            return redirect('listaricette')
+    
+    
+    if request.method == "GET":
+        formset = IngredientFormSet()
+        context = {
+            "form": form,
+            'formset': formset
+        }
+        print("Ho eseguito il metodo get")
+        return render(request, "gestione/create_update_ricetta_avanzato.html", context)
 
-    def get_success_url(self):
-        pk = self.get_context_data()["object"].pk
-        return reverse_lazy("ricetta",kwargs={'pk': pk})
-
-
-# ottimo video, proprio in tema ricette: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
 @login_required
 def ricetta_update_view(request, pk=None):
     ricetta = Ricetta.objects.get(pk=pk)
@@ -71,10 +98,9 @@ def ricetta_update_view(request, pk=None):
             if formset.is_valid():
                 form.save()
                 formset.save()
-            print("Ho eseguito il metodo post")
             return redirect('updatericettaavanzato', pk = ricetta.id)
 
-        else: #'back' in request.POST:
+        else: 
             return redirect('ricetta', pk = ricetta.id)
     
     if request.method == "GET":
@@ -85,28 +111,14 @@ def ricetta_update_view(request, pk=None):
             'formset': formset
         }
         print("Ho eseguito il metodo get")
-        return render(request, "gestione/update_ricetta_avanzato.html", context)
+        return render(request, "gestione/create_update_ricetta_avanzato.html", context)
     
 
 
-# Si puó togliere 
-class AggiungiIngredientiView(CreateView):
-    model = Ingredient
-    template_name = "gestione/aggiungi_ingredienti.html"
-    form_class = IngredientForm
-    success_url = reverse_lazy("listaricette") 
 
-    def form_valid(self, form):
-        ricetta_id = self.request.resolver_match.kwargs["pk"]
-        form.instance.ricetta = Ricetta.objects.get(id = ricetta_id)
-        return super().form_valid(form)
     
 
-class DetailRicettaView(DetailView):
-    model = Ricetta
-    template_name = "gestione/ricetta_details.html"
-
-
+# DELETE ricetta: sempre vanno aggiunti gli ingredienti
 class DeleteRicettaView(DeleteView):
     model = Ricetta
     template_name = "gestione/cancella_ricetta.html"
@@ -120,6 +132,7 @@ class DeleteRicettaView(DeleteView):
         return reverse_lazy("listaricette")    
 
 
+# RICERCA E RISULTATI RICERCA
 def search(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
@@ -146,37 +159,4 @@ class SearchResultsList(ListView):
 
         return qq
 
-# Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
-# Piú verbosa, meno funzionale, ma piú semplice da capire:
-"""
-def aggiungiIngredientiAvanzato(request, ricetta_id):
-    ricetta = Ricetta.objects.get(pk=ricetta_id)
-    IngredientFormSet = modelformset_factory(Ingredient, fields=("nome", "quantitá"))
-    
-    if request.method == "POST":
-        formset = IngredientFormSet(request.POST, queryset=Ingredient.objects.filter(ricetta__id=ricetta_id))
-        if formset.is_valid():
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.ricetta_id = ricetta.id
-                instance.save()
 
-        return redirect('aggiungiingredienti', ricetta_id = ricetta.id)
-
-    formset = IngredientFormSet(queryset=Ingredient.objects.filter(ricetta__id=ricetta_id))
-    return render(request, 'gestione/ingredienti_avanzato.html', {'formset': formset})
-"""
-
-def aggiungiIngredientiAvanzato(request, ricetta_id):
-    ricetta = Ricetta.objects.get(pk=ricetta_id)
-    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", ), extra=1)
-    
-    if request.method == "POST":
-        formset = IngredientFormSet(request.POST, instance=ricetta)
-        if formset.is_valid():
-            formset.save()
-
-        return redirect('aggiungiingredienti', ricetta_id = ricetta.id)
-
-    formset = IngredientFormSet(instance=ricetta)
-    return render(request, 'gestione/ingredienti_avanzato.html', {'formset': formset})
