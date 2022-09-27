@@ -24,16 +24,9 @@ specificato.
     ○ self.add_error(“campo interessato”,”stringa associata all’errore”)
 """
 
-class CreateRicettaForm(forms.ModelForm):
-    
+class RicettaForm(forms.ModelForm):  
     description_create = "Create a new Ricetta!"
     description_update = "Update a Ricetta!"
-
-    #def clean(self):
-        #if (len(self.cleaned_data["nome"]) < 3):
-        #    self.add_error("nome","Error: ricetta text must be at least 5 characters long")
-    
-        #return self.cleaned_data
 
     class Meta:
         model = Ricetta
@@ -41,7 +34,6 @@ class CreateRicettaForm(forms.ModelForm):
 
 
 class IngredientForm(forms.ModelForm):
-        
     class Meta:
         model = Ingredient
         exclude = ('ricetta',)
@@ -59,5 +51,3 @@ formset.is_valid()
 """
 
 IngredientFormSet = formset_factory(IngredientForm, extra=2)
-#for form in IngredientFormSet:
- #   print(form.as_table())

@@ -30,7 +30,8 @@ urlpatterns = [
 
     path("crea_ricetta_avanzato/", views.CreateRicettaAvanzatoView.as_view(), name="crearicettaavanzato"),
     # path("aggiunti_ingredienti/<pk>/", views.AggiungiIngredientiView.as_view(), name="aggiungiingredienti"),
-    path("update_ricetta_avanzato/<pk>/", views.UpdateRicettaAvanzatoView.as_view(), name="updatericettaavanzato"),
+    # path("update_ricetta_avanzato/<pk>/", views.UpdateRicettaAvanzatoView.as_view(), name="updatericettaavanzato"),
+    path("update_ricetta_avanzato/<pk>/", views.ricetta_update_view, name="updatericettaavanzato"),
 
     path("lista_ricette_private/", views.ListaRicettePrivateViews.as_view(), name="listaricetteprivate"),
 

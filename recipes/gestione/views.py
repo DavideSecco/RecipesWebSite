@@ -1,4 +1,5 @@
 from audioop import reverse
+from multiprocessing import context
 from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
@@ -9,6 +10,7 @@ from .forms import *
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory, inlineformset_factory
 from .models import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -35,7 +37,7 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
 class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
     model = Ricetta
     template_name = "gestione/crea_ricetta_avanzato.html"
-    form_class = CreateRicettaForm
+    form_class = RicettaForm
 
     def get_success_url(self):
         ricetta_id = self.get_context_data()["object"].pk
@@ -46,15 +48,48 @@ class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class UpdateRicettaAvanzatoView(UpdateView):
+class UpdateRicettaAvanzatoView(LoginRequiredMixin, UpdateView):
     template_name = "gestione/update_ricetta_avanzato.html"
-    form_class = CreateRicettaForm
+    form_class = RicettaForm
     model = Ricetta
 
     def get_success_url(self):
         pk = self.get_context_data()["object"].pk
         return reverse_lazy("ricetta",kwargs={'pk': pk})
 
+
+# ottimo video, proprio in tema ricette: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
+@login_required
+def ricetta_update_view(request, pk=None):
+    ricetta = Ricetta.objects.get(pk=pk)
+    form = RicettaForm(request.POST or None, instance=ricetta)
+    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", ), extra=1)
+    
+    if request.method == "POST":
+        if 'save' in request.POST:
+            formset = IngredientFormSet(request.POST, instance=ricetta)
+            if formset.is_valid():
+                form.save()
+                formset.save()
+            print("Ho eseguito il metodo post")
+            return redirect('updatericettaavanzato', pk = ricetta.id)
+
+        else: #'back' in request.POST:
+            return redirect('ricetta', pk = ricetta.id)
+    
+    if request.method == "GET":
+        formset = IngredientFormSet(instance=ricetta)
+        context = {
+            "form": form,
+            "object": ricetta,
+            'formset': formset
+        }
+        print("Ho eseguito il metodo get")
+        return render(request, "gestione/update_ricetta_avanzato.html", context)
+    
+
+
+# Si puó togliere 
 class AggiungiIngredientiView(CreateView):
     model = Ingredient
     template_name = "gestione/aggiungi_ingredienti.html"

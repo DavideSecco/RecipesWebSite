@@ -10,8 +10,8 @@
 
     <form method="POST"> {% csrf_token %}
         {{form|crispy}}
-
-        <input type="submit" value="Modify">
+        {{ formset.as_p}}    
+        <input type="submit" name="save" value="Modifica e salva">
+        <input type="submit" name="back" value="Torna indietro">
     </form>
-
 {% endblock %}

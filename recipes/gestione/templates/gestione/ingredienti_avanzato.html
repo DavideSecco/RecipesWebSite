@@ -2,9 +2,8 @@
 
 {% block content %}
     <form method= "POST">
-        
         {% csrf_token %}
         {{ formset.as_p }}
-        <Button type="submit"> Save </button>
+        <Button type="submit"> Aggiungi Ingrediente </button>
     </form>    
 {% endblock %}
