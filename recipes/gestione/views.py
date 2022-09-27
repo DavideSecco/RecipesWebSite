@@ -35,27 +35,18 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
         return Data
 
 
-# DETAIL RICETTA: da aggionare e mostrare anche gli ingredienti
-class DetailRicettaView(DetailView):
-    model = Ricetta
-    template_name = "gestione/ricetta_details.html"
-
+# DETAIL RICETTA: 
+def ricetta_detail_view(request, pk):
+    ricetta = Ricetta.objects.get(pk=pk)
+    ingredienti = Ingredient.objects.filter(ricetta = pk).values
+    context = {
+        'ricetta' : ricetta,
+        'ingredienti' : ingredienti
+    }
+    return render(request, "gestione/ricetta_details.html", context)
 
 # CREATE & UPDATE: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
 # Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
-class CreateRicettaAvanzatoView(LoginRequiredMixin, CreateView):
-    model = Ricetta
-    template_name = "gestione/crea_ricetta_avanzato.html"
-    form_class = RicettaForm
-
-    def get_success_url(self):
-        ricetta_id = self.get_context_data()["object"].pk
-        return reverse_lazy("aggiungiingredienti",kwargs={'ricetta_id': ricetta_id})
-
-    def form_valid(self, form):
-        form.instance.utente = self.request.user
-        return super().form_valid(form)
-
 @login_required
 def ricetta_create_view(request):
     form = RicettaForm(request.POST or None)
@@ -113,11 +104,6 @@ def ricetta_update_view(request, pk=None):
         print("Ho eseguito il metodo get")
         return render(request, "gestione/create_update_ricetta_avanzato.html", context)
     
-
-
-
-    
-
 # DELETE ricetta: sempre vanno aggiunti gli ingredienti
 class DeleteRicettaView(DeleteView):
     model = Ricetta

@@ -2,23 +2,26 @@
 
 {% block content %}
 
-    <h1> {{object.nome}} </h1>
+    <h1> {{ricetta.nome}} </h1>
 
     {% load static %}<img src="{% static '/img/immagine_di_prova.jpg' %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
     <ul>
-        <li> Difficoltá: {{ object.difficoltá }} </li>
-        <li> Regime alimentare: {{ object.regime_alimentare }}</li>
-        <li> Portata: {{ object.portata }} </li>
-        <li> Costo: {{ object.costo }} € </li>
-        <li> Tempo di preparazione: {{ object.tempo_preparazione }} min </li>
-        <li> Tempo di cottura: {{ object.tempo_cottura }} min </li>
-        <li> Porzioni: {{ object.porzioni }} </li>
-        <li> Autore: {{ object.utente }} </li>
+        <li> Difficoltá: {{ ricetta.difficoltá }} </li>
+        <li> Regime alimentare: {{ ricetta.regime_alimentare }}</li>
+        <li> Portata: {{ ricetta.portata }} </li>
+        <li> Costo: {{ ricetta.costo }} € </li>
+        <li> Tempo di preparazione: {{ ricetta.tempo_preparazione }} min </li>
+        <li> Tempo di cottura: {{ ricetta.tempo_cottura }} min </li>
+        <li> Porzioni: {{ ricetta.porzioni }} </li>
+        <li> Autore: {{ ricetta.utente }} </li>
     </ul>
 
-    Id della ricetta: {{ object.id }}
-
-    <h3> Preparazione </h3>
+    <h4> Ingredienti </h4>
+    <ul>
+        {% for ingrediente in ingredienti %}
+            <li>{{ ingrediente.nome }} : {{ ingrediente.quantitá }}</li>
+        {% endfor %}
+    </ul>
 
     {% if user.username  == object.utente.username %}
         <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato </a>
