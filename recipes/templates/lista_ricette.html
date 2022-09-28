@@ -5,9 +5,10 @@
     {% for ricetta in object_list %}
         <ul>
             <articole>
-                <a href="{% url 'ricetta' ricetta.id %}">
-                    {% load static %}<img src="{% static '/img/immagine_di_prova.jpg' %}" width="150" height="80" align=right Hspace="15" Vspace="0" 
-                    Border="0">
+                <a href="{% url 'ricetta' ricetta.id %}"> 
+                    {% if ricetta.immagine %}
+                        {% load static %}<img src="{% static ricetta.immagine.url %}" width="200" height="120" align=right Hspace="15" Vspace="0" Border="0">
+                    {% endif %}                    
                     <h2> {{ ricetta }} </h2> 
                     <ul>
                         <li> Difficoltà: {{ ricetta.difficoltá }}</li>

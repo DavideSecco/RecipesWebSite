@@ -3,8 +3,9 @@
 {% block content %}
 
     <h1> {{ricetta.nome}} </h1>
-
-    {% load static %}<img src="{% static '/img/immagine_di_prova.jpg' %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
+    {% if ricetta.immagine %}
+        {% load static %}<img src="{% static ricetta.immagine.url %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
+    {% endif %}    
     <ul>
         <li> Difficoltá: {{ ricetta.difficoltá }} </li>
         <li> Regime alimentare: {{ ricetta.regime_alimentare }}</li>
@@ -23,7 +24,7 @@
         {% endfor %}
     </ul>
 
-    {% if user.username  == object.utente.username %}
+    {% if user.username  == ricetta.utente.username %}
         <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato </a>
         <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
     {% endif %}
