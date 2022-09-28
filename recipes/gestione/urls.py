@@ -25,7 +25,6 @@ urlpatterns = [
     path("lista_ricette_private/", views.ListaRicettePrivateViews.as_view(), name="listaricetteprivate"),
 
     # DETAIL RICETTA
-    # path("ricetta/<pk>/", views.DetailRicettaView.as_view(), name="ricetta"),
     path("ricetta/<pk>/", views.ricetta_detail_view, name="ricetta"),
     
     # CREATE & UPDATE
