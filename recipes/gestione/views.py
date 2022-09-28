@@ -81,18 +81,21 @@ def ricetta_create_view(request):
 def ricetta_update_view(request, pk=None):
     ricetta = Ricetta.objects.get(pk=pk)
     form = RicettaForm(request.POST or None, instance=ricetta)
-    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura" ), extra=1)
+    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura" ), extra=1, can_delete=True)
     
     if request.method == "POST":
-        print("Post 1")
+        # Premo su pulsante save
         if 'save' in request.POST:
-            print("Post 2")
             formset = IngredientFormSet(request.POST, instance=ricetta)
+            # Se il form della RICETTA é valido, salvo la RICETTA
             if form.is_valid:
-                print("Post 3")
                 form.save()
-                if formset.is_valid():
-                    formset.save()
+                # Per ogni ingrediente devo controllare che sia corretto, e ricorda che il campo vuoto NON É CORRETTO
+                for form in formset:
+                    # Check if value is empty using value().
+                    if form['nome'].value():
+                        # this form's field is not empty. Create and save object.
+                        form.save()
             return redirect('updatericettaavanzato', pk = ricetta.id)
 
         else: 

@@ -1,4 +1,3 @@
-
 import datetime
 from email.mime import image
 from email.policy import default
@@ -44,9 +43,9 @@ class Ricetta(models.Model):
 UNITA_DI_MISURA_CHOICES = (("1", "grammi"), ("2", "unitá"), ("3", "ml"))
 
 class Ingredient(models.Model):
-    nome = models.CharField(max_length=50)
-    quantitá = models.IntegerField()
-    unita_di_misura = models.CharField(default="grammi", choices=UNITA_DI_MISURA_CHOICES, max_length=50)
+    nome = models.CharField(max_length=50, null=True)
+    quantitá = models.IntegerField(null=True)
+    unita_di_misura = models.CharField(default="grammi", choices=UNITA_DI_MISURA_CHOICES, max_length=50, null=True)
 
     ricetta = models.ForeignKey(Ricetta, on_delete=models.CASCADE, related_name="ingredients")
 

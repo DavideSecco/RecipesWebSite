@@ -38,4 +38,8 @@ class IngredientForm(forms.ModelForm):
         model = Ingredient
         exclude = ('ricetta',)
 
+    def __init__(self, *arg, **kwarg):
+        super(IngredientForm, self).__init__(*arg, **kwarg)
+        self.empty_permitted = False
+
 IngredientFormSet = formset_factory(IngredientForm, extra=2)
