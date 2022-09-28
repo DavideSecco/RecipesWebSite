@@ -9,8 +9,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-REGIME_ALIMENTARE_CHOICES = (("1", "Vegetariano"), ("2","Vegano"), ("3","Nessuno"))
-
 DIFFICOLTA_CHOICES = (("1", "Bassa"), ("2","Media"), ("3","Alta"))
 
 PORTATA_CHOICES = (("1", "Antipasto"), ("2", "Primo"), ("3", "Secondo"), ("4", "Dolce"))
@@ -18,12 +16,14 @@ PORTATA_CHOICES = (("1", "Antipasto"), ("2", "Primo"), ("3", "Secondo"), ("4", "
 class Ricetta(models.Model):
     nome = models.CharField(max_length=50)
     difficoltá = models.CharField(max_length=50, choices=DIFFICOLTA_CHOICES, default="Bassa")
-    regime_alimentare = models.CharField(max_length=50, choices = REGIME_ALIMENTARE_CHOICES, default="Nessuno")
     portata = models.CharField(max_length=50, choices = PORTATA_CHOICES, default="Primo")
-    costo = models.IntegerField(default=50)
-    tempo_preparazione = models.IntegerField(default=20)
-    tempo_cottura = models.IntegerField(default=10)
-    porzioni = models.IntegerField(default=2)
+    costo = models.IntegerField(default=0)
+    tempo_preparazione = models.IntegerField(default=0)
+    tempo_cottura = models.IntegerField(default=0)
+    porzioni = models.IntegerField(default=1)
+    vegetariano = models.BooleanField(default = False)
+    vegano = models.BooleanField(default = False)
+    gluten_free = models.BooleanField(default = False)
     immagine = models.ImageField(null=True, blank=True, default=None)
     utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
 
