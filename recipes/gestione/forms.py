@@ -38,16 +38,4 @@ class IngredientForm(forms.ModelForm):
         model = Ingredient
         exclude = ('ricetta',)
 
-"""
-IngredientFormSet = forms.inlineformset_factory(Ricetta, Ingredient, form=IngredientForm)
-# IngredientFormSet = formset_factory(Ingredient, formset=IngredientForm)
-data = {
-    'form-TOTAL_FORMS': '1501',
-    'form-INITIAL_FORMS': '2',
-    'form-MIN_NUM_FORMS': '2'
-}
-formset = IngredientFormSet(data) 
-formset.is_valid()
-"""
-
 IngredientFormSet = formset_factory(IngredientForm, extra=2)

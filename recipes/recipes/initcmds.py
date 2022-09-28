@@ -1,3 +1,4 @@
+from genericpath import exists
 from gestione.models import Ricetta
 from django.utils import timezone
 from datetime import datetime
@@ -8,8 +9,8 @@ def erase_db():
 
 
 def init_db():
-    if len(Ricetta.objects.all()) != 0:
-        return
+    #if len(Ricetta.objects.all()) != 0:
+    #    return
 
     ricettedict = {
         "nome" : ["provaaaa", "Lasagne", "Tigelle"],

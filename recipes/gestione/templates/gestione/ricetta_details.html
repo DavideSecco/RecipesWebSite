@@ -19,7 +19,7 @@
     <h4> Ingredienti </h4>
     <ul>
         {% for ingrediente in ingredienti %}
-            <li>{{ ingrediente.nome }} : {{ ingrediente.quantitá }}</li>
+            <li>{{ ingrediente.nome }} : {{ ingrediente.quantitá }} {{ ingrediente.unita }}</li>
         {% endfor %}
     </ul>
 

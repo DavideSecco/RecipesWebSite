@@ -50,7 +50,7 @@ def ricetta_detail_view(request, pk):
 @login_required
 def ricetta_create_view(request):
     form = RicettaForm(request.POST or None)
-    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", ), extra=1)
+    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura"), extra=1)
 
     if request.method == "POST":
         if 'save' in request.POST:

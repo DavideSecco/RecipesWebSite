@@ -5,12 +5,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    Questo é il file "update_ricetta_avanzato.html"
     <h1> {{ view.form_class.description_update }} </h1>
 
     <form method="POST"> {% csrf_token %}
         {{form|crispy}}
-        {{ formset.as_p}}    
+        <h4> Ingredienti </h4>
+        {{ formset.as_p }} 
+        <br>
         <input type="submit" name="save" value="Modifica e salva">
         <input type="submit" name="back" value="Torna indietro">
     </form>
