@@ -3,6 +3,8 @@ from django import forms
 
 from gestione.models import Ricetta, Ingredient
 from django.forms import formset_factory
+from django.forms import BaseInlineFormSet
+from django.forms import BaseFormSet
 
 
 class SearchForm(forms.Form):
@@ -33,13 +35,7 @@ class RicettaForm(forms.ModelForm):
         exclude = ["utente",]
 
 
-class IngredientForm(forms.ModelForm):
+class IngredientForm(forms.ModelForm): 
     class Meta:
         model = Ingredient
         exclude = ('ricetta',)
-
-    def __init__(self, *arg, **kwarg):
-        super(IngredientForm, self).__init__(*arg, **kwarg)
-        self.empty_permitted = False
-
-IngredientFormSet = formset_factory(IngredientForm, extra=2)

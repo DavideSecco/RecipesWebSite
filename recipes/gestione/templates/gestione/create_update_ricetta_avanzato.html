@@ -7,7 +7,7 @@
 {% block content %}
     <h1> {{ view.form_class.description_update }} </h1>
 
-    <form method="POST"> {% csrf_token %}
+    <form method="POST" enctype = "multipart/form-data"> {% csrf_token %}
         {{form|crispy}}
         <h4> Ingredienti </h4>
         {{ formset.as_p }} 

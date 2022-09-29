@@ -1,5 +1,6 @@
 from audioop import reverse
 from multiprocessing import context
+from pickle import TRUE
 # from typing_extensions import Required
 from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
@@ -49,7 +50,7 @@ def ricetta_detail_view(request, pk):
 # Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
 @login_required
 def ricetta_create_view(request):
-    form = RicettaForm(request.POST or None)
+    form = RicettaForm(request.POST or None, request.FILES or None)
     IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura"), extra=1)
 
     if request.method == "POST":
@@ -58,11 +59,12 @@ def ricetta_create_view(request):
                 obj = form.save(commit = False)
                 obj.utente = request.user
                 obj.save()
-                formset = IngredientFormSet(request.POST, instance=form.instance)
+                formset = IngredientFormSet(request.POST or None, instance=form.instance)
                 if formset.is_valid():
                     formset.save()
                 
             print("Ho eseguito il metodo post")
+            # return redirect('listaricette')
             return redirect('updatericettaavanzato', pk = obj.id)
         else:
             return redirect('listaricette')
@@ -80,24 +82,29 @@ def ricetta_create_view(request):
 @login_required
 def ricetta_update_view(request, pk=None):
     ricetta = Ricetta.objects.get(pk=pk)
-    form = RicettaForm(request.POST or None, instance=ricetta)
-    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura" ), extra=1, can_delete=True)
+    form = RicettaForm(request.POST or None, request.FILES  or None, instance=ricetta)
+    IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura" ), 
+                        extra=1, can_delete=True, can_delete_extra=True, validate_max=0)
     
     if request.method == "POST":
         # Premo su pulsante save
         if 'save' in request.POST:
-            formset = IngredientFormSet(request.POST, instance=ricetta)
-            # Se il form della RICETTA é valido, salvo la RICETTA
             if form.is_valid:
                 form.save()
-                # Per ogni ingrediente devo controllare che sia corretto, e ricorda che il campo vuoto NON É CORRETTO
-                for form in formset:
-                    # Check if value is empty using value().
-                    if form['nome'].value():
-                        # this form's field is not empty. Create and save object.
-                        form.save()
-            return redirect('updatericettaavanzato', pk = ricetta.id)
+                formset = IngredientFormSet(request.POST or None, instance=ricetta)
 
+                # https://stackoverflow.com/questions/66877831/django-inline-formset-field-required-not-required-setting-in-view
+                # modify all the fields
+                for form in formset:
+                    for field in form.fields.values():
+                        field.required = False
+
+                if formset.is_valid():
+                    formset.save()
+                else: 
+                    print("il formset NON é valido: " + formset.errors)
+
+                return redirect('updatericettaavanzato', pk = ricetta.id)
         else: 
             return redirect('ricetta', pk = ricetta.id)
     

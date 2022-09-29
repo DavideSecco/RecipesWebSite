@@ -126,5 +126,5 @@ LOGIN_REDIRECT_URL = "/?login=ok" #redireziona alla home, ma con un parametro GE
 
 LOGIN_URL = "login"
 
-MEDIA_URL = '/img/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
+MEDIA_URL = '/recipes/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/recipes')
