@@ -98,9 +98,27 @@ def ricetta_update_view(request, pk=None):
                 for form in formset:
                     for field in form.fields.values():
                         field.required = False
-
-                if formset.is_valid():
-                    formset.save()
+                        
+                
+                """
+                Siccome dal ciclo sopra abbiamo redo tutti i campi non obbligatori il parametro extra=1 ogni volta
+                aggiunge un form anche se quelli precendenti sono vuoti.
+                Per questo dopo aver controllato che il formset sia valido, controllo che tutti i forms siano stati
+                compilati senza quindi far si che ogni volta che si salva venga creato un form nuovo in piú
+                """
+                # la funzione é scritta molto male, ma non so come fare in modo pythonico
+                # https://stackoverflow.com/questions/31849379/deleting-form-from-django-formset --> non c'é modo di eliminare un form da formset
+                #b = True
+                if formset.is_valid() :
+                    # print("Il formset é valido")
+                    # if formset.has_changed():
+                    #     formset.save()
+                    # for form in formset:
+                    #     if form.cleaned_data['nome'] == None and form.cleaned_data['quantitá'] == None:
+                    #         #form.delete()
+                    #         b = False
+                    # if b == True:
+                        formset.save()
                 else: 
                     print("il formset NON é valido: " + formset.errors)
 

@@ -10,7 +10,10 @@
     <form method="POST" enctype = "multipart/form-data"> {% csrf_token %}
         {{form|crispy}}
         <h4> Ingredienti </h4>
-        {{ formset.as_p }} 
+        {{ formset.management_form }}
+        {% for form in formset %}
+            {{ form.as_table }} <br> <br>
+        {% endfor %}
         <br>
         <input type="submit" name="save" value="Modifica e salva">
         <input type="submit" name="back" value="Torna indietro">

@@ -8,7 +8,6 @@
     {% endif %}    
     <ul>
         <li> Difficoltá: {{ ricetta.difficoltá }} </li>
-        <li> Regime alimentare: {{ ricetta.regime_alimentare }}</li>
         <li> Portata: {{ ricetta.portata }} </li>
         <li> Costo: {{ ricetta.costo }} € </li>
         <li> Tempo di preparazione: {{ ricetta.tempo_preparazione }} min </li>
@@ -16,7 +15,15 @@
         <li> Porzioni: {{ ricetta.porzioni }} </li>
         <li> Autore: {{ ricetta.utente }} </li>
     </ul>
+    {% if ricetta.vegetariano %}
+        <img src={% static "static/img/vetarian_simbol.png" %} width="60" height="60" Hspace="15" Vspace="0" Border="0">        
+    {% endif %}
+    {% if ricetta.vegano %}
+        <img src={% static "static/img/vegan_simbol.png" %} width="60" height="60" Hspace="15" Vspace="0" Border="0">
+    {% endif %}
 
+
+    <br> <br>
     <h4> Ingredienti </h4>
     <ul>
         {% for ingrediente in ingredienti %}
