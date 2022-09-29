@@ -4,11 +4,11 @@
 
     <h1> {{ricetta.nome}} </h1>
     {% if ricetta.immagine %}
-        {% load static %}<img src="{% static ricetta.immagine.url %}" width="300" height="160" align=right Hspace="15" Vspace="0" Border="0">
+        {% load static %}<img src="{% static ricetta.immagine.url %}" width="500" height="300" align=right Hspace="15" Vspace="0" Border="0">
     {% endif %}    
     <ul>
-        <li> Difficoltá: {{ ricetta.difficoltá }} </li>
-        <li> Portata: {{ ricetta.portata }} </li>
+        <li> Difficoltá: {{ ricetta.get_difficoltá_display }} </li>
+        <li> Portata: {{ ricetta.get_portata_display }} </li>
         <li> Costo: {{ ricetta.costo }} € </li>
         <li> Tempo di preparazione: {{ ricetta.tempo_preparazione }} min </li>
         <li> Tempo di cottura: {{ ricetta.tempo_cottura }} min </li>
@@ -21,13 +21,18 @@
     {% if ricetta.vegano %}
         <img src={% static "static/img/vegan_simbol.png" %} width="60" height="60" Hspace="15" Vspace="0" Border="0">
     {% endif %}
+    {% if ricetta.gluten_free %}
+        <img src={% static "static/img/gluten_free_simbol.jpg" %} width="60" height="60" Hspace="15" Vspace="0" Border="0">
+    {% endif %}
 
 
     <br> <br>
     <h4> Ingredienti </h4>
     <ul>
         {% for ingrediente in ingredienti %}
-            <li>{{ ingrediente.nome }} : {{ ingrediente.quantitá }} {{ ingrediente.unita }}</li>
+            {% if ingrediente.nome %}
+                <li>{{ ingrediente.nome }} : {{ ingrediente.quantitá }} {{ ingrediente.unita_di_misura }} {{ ingrediente.get_unita_di_misura_display }} qui non riesco a far vedere unitá di misura</li>
+            {% endif %}    
         {% endfor %}
     </ul>
 
