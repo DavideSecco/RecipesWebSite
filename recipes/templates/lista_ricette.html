@@ -14,13 +14,14 @@
                         <li> Difficoltà: {{ ricetta.difficoltá }}</li>
                         <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
                         <li> Proprietario: {{ ricetta.utente }} </li>
+                        <li> Vegetariano: {{ ricetta.vegetariano }} </li>
                     </ul>
                 </a> 
             </articole>
         </ul>
     {% endfor %}
     
-    <p> il numero totale di ricette é {{ view.get_totale_ricette }} </p>
+    <!-- <p> il numero totale di ricette é {{ view.get_totale_ricette }} </p> -->
 
 {% endblock %}
 

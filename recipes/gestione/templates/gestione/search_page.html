@@ -2,11 +2,13 @@
 
 {% block title %} Search Page Form {% endblock %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
     <h1>Search Page</h1>
     
     <form action="{% url 'search' %}" method="POST">{% csrf_token %}
-        {{form.as_p}}
-    <input type="submit" value="Search"> </form>
+        {{form|crispy}} <br>
+    <input type="submit" value="Search" name='q'> </form>
 
 {% endblock %}

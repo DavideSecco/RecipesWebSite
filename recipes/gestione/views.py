@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory, inlineformset_factory
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 
@@ -151,30 +152,46 @@ class DeleteRicettaView(DeleteView):
 
 
 # RICERCA E RISULTATI RICERCA
+# https://www.youtube.com/watch?v=G-Rct7Na0UQ
 def search(request):
+    initial = {
+            'sstring': r'^$',
+            "meno_tempo_di_preparazione" : "100",
+            "is_vegetarian": False
+    }
+    form = SearchForm(initial=initial)
+
     if request.method == "POST":
-        form = SearchForm(request.POST)
+        form = SearchForm(request.POST, initial=initial)
         if form.is_valid():
-            sstring = form.cleaned_data.get("search_string")
-            where = form.cleaned_data.get("search_where")
-            return redirect("searchresults", sstring, where)
-    else:
-        form = SearchForm()
+            sstring = form.cleaned_data.get("search_string" or None)
+            print("quasta é la stringa:" + sstring)
+            is_vegetarian = form.cleaned_data.get("is_vegetarian")
+            meno_tempo_di_preparazione = form.cleaned_data.get("meno_tempo_di_preparazione")
+            # return redirect("searchresults", sstring, is_vegetarian, meno_tempo_di_preparazione) 
+            return redirect()
     
-    return render(request,template_name="gestione/search_page.html",context={"form":form})
+    context = {
+        "form": form
+    }
+    return render(request,template_name="gestione/search_page.html",context=context)
 
 
 class SearchResultsList(ListView):
     model = Ricetta
-    template_name = "gestione/search_results.html"
+    template_name = "lista_ricette.html"
 
     def get_queryset(self):
         sstring = self.request.resolver_match.kwargs["sstring"]
-        where = self.request.resolver_match.kwargs["where"]
+        
+        is_vegetarian = self.request.resolver_match.kwargs['is_vegetarian']
+        meno_tempo_di_preparazione = self.request.resolver_match.kwargs["meno_tempo_di_preparazione"]
 
-        if "Ricette" in where:
-            qq = Ricetta.objects.filter(nome__icontains=sstring)
-
-        return qq
-
-
+        if sstring == '':
+            qs = Ricetta.objects.filter(vegetariano=is_vegetarian, 
+                                        tempo_preparazione__lt = meno_tempo_di_preparazione)  
+        else: 
+            qs = Ricetta.objects.filter(nome__icontains=sstring, 
+                                        vegetariano=is_vegetarian, 
+                                        tempo_preparazione__lt = meno_tempo_di_preparazione)  
+        return qs
