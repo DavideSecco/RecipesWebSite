@@ -1,14 +1,15 @@
-{% extends "base.html" %}
+{% extends "lista_ricette.html" %}
 
 {% block title %} Search Page Form {% endblock %}
 
 {% load crispy_forms_tags %}
 
-{% block content %}
-    <h1>Search Page</h1>
-    
-    <form action="{% url 'search' %}" method="POST">{% csrf_token %}
-        {{form|crispy}} <br>
-    <input type="submit" value="Search" name='q'> </form>
+<h1>Search Page</h1>
 
+{% block ricerca %} 
+    <form action="{% url 'search' %}" method="POST">{% csrf_token %}
+        {{form|crispy}}
+    <input type="submit" value="Search" name='q'> </form>
 {% endblock %}
+
+    

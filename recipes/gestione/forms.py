@@ -9,8 +9,8 @@ from django.forms import BaseFormSet
 
 
 class SearchForm(forms.Form):
-    search_string = forms.CharField(label="Nome ricetta", max_length=100, required=False) #min_lenght=3,
-    meno_tempo_di_preparazione = forms.CharField(label="Tempo di preparazione massimo", required=False)
+    nome = forms.CharField(label="Nome ricetta", max_length=100, required=False) #min_lenght=3,
+    t_prep = forms.IntegerField(label="Tempo di preparazione massimo", required=False)
     is_vegetarian = forms.BooleanField(label = "Vegetariano", required=False)
 
 

@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 
+{% block ricerca %} 
+
+{% endblock %}
+
 {% block content %}
 
     {% for ricetta in object_list %}
         <ul>
             <articole>
+                <hr>
                 <a href="{% url 'ricetta' ricetta.id %}"> 
                     {% if ricetta.immagine %}
                         {% load static %}<img src="{% static ricetta.immagine.url %}" width="200" height="120" align=right Hspace="15" Vspace="0" Border="0">
                     {% endif %}                    
                     <h2> {{ ricetta }} </h2> 
                     <ul>
-                        <li> Difficoltà: {{ ricetta.difficoltá }}</li>
+                        <li> Difficoltà: {{ ricetta.get_difficoltá_display }}</li>
                         <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
                         <li> Proprietario: {{ ricetta.utente }} </li>
                         <li> Vegetariano: {{ ricetta.vegetariano }} </li>
