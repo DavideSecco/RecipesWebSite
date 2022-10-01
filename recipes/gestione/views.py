@@ -1,4 +1,6 @@
 from audioop import reverse
+from gc import get_objects
+from http.client import HTTPResponse
 from multiprocessing import context
 from pickle import TRUE
 # from typing_extensions import Required
@@ -14,6 +16,8 @@ from django.forms import modelformset_factory, inlineformset_factory
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponseNotFound
+
 
 # Create your views here.
 
@@ -82,7 +86,11 @@ def ricetta_create_view(request):
 
 @login_required
 def ricetta_update_view(request, pk=None):
-    ricetta = Ricetta.objects.get(pk=pk)
+    try:
+        ricetta = Ricetta.objects.get(id=pk, utente = request.user)
+    except Ricetta.DoesNotExist:
+        return render(request, "gestione/pagina_di_errore.html")
+
     form = RicettaForm(request.POST or None, request.FILES  or None, instance=ricetta)
     IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura" ), 
                         extra=1, can_delete=True, can_delete_extra=True, validate_max=0)
@@ -137,19 +145,20 @@ def ricetta_update_view(request, pk=None):
         print("Ho eseguito il metodo get")
         return render(request, "gestione/create_update_ricetta_avanzato.html", context)
     
-# DELETE ricetta: sempre vanno aggiunti gli ingredienti
-class DeleteRicettaView(DeleteView):
-    model = Ricetta
-    template_name = "gestione/cancella_ricetta.html"
+def ricetta_delete_view(request, pk):
+    try:
+        obj = Ricetta.objects.get(id=pk, utente = request.user)
+    except Ricetta.DoesNotExist:
+        return render(request, "gestione/pagina_di_errore.html")
+    
+    if request.method == "POST":
+        obj.delete()
+        return redirect ("listaricette")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context["Ricetta"] = "Ricetta"
-        return context
-
-    def get_success_url(self):
-        return reverse_lazy("listaricette")    
-
+    context = {
+        "object" : obj
+    }
+    return render (request, "gestione/cancella_ricetta.html", context=context)
 
 # RICERCA E RISULTATI RICERCA
 # https://www.youtube.com/watch?v=G-Rct7Na0UQ

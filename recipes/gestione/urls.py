@@ -32,8 +32,8 @@ urlpatterns = [
     path("update_ricetta_avanzato/<pk>/", views.ricetta_update_view, name="updatericettaavanzato"),
 
     # DELETE
-    path("cancella_ricetta/<pk>/", views.DeleteRicettaView.as_view(), name="deletericetta"),
-    
+    path("cancella_ricetta/<pk>/", views.ricetta_delete_view, name="deletericetta"),
+
     # RICERCA E RISULTATI RICERCA
     path("search/", search_advanced, name="search"),
 ]

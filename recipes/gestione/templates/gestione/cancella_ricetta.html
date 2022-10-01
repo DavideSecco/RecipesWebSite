@@ -7,7 +7,7 @@
     <br>
 
     <form method="post">{% csrf_token %}
-        <p>Sicuro di voler cancellare "{{ object }}"?</p>
+        <p>Sicuro di voler cancellare "{{ object }}"? autore {{ object.utente }}</p>
         <input type="submit" value="Conferma">
     </form>
 
