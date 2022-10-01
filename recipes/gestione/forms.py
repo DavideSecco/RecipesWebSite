@@ -2,17 +2,24 @@ from dataclasses import field
 from email.policy import default
 from django import forms
 
-from gestione.models import Ricetta, Ingredient
+from gestione.models import *
 from django.forms import formset_factory
 from django.forms import BaseInlineFormSet
 from django.forms import BaseFormSet
 
+DIFFICOLTA_CHOICES = (("0", ""), ("1", "Bassa"), ("2","Media"), ("3","Alta"))
+
+PORTATA_CHOICES = (("0", ""), ("1", "Antipasto"), ("2", "Primo"), ("3", "Secondo"), ("4", "Dolce"))
 
 class SearchForm(forms.Form):
     nome = forms.CharField(label="Nome ricetta", max_length=100, required=False) #min_lenght=3,
+    difficolta = forms.ChoiceField(label = "Difficolta", choices=DIFFICOLTA_CHOICES, required = False)
+    portata = forms.ChoiceField(label="Pasto", choices=PORTATA_CHOICES, required=False)
+    costo_max = forms.IntegerField(label="Costo Massimo", required=False)
     t_prep = forms.IntegerField(label="Tempo di preparazione massimo", required=False)
     is_vegetarian = forms.BooleanField(label = "Vegetariano", required=False)
-
+    is_vegan = forms.BooleanField(label = "Vegano", required=False)
+    is_gluten_free = forms.BooleanField(label = "Gluten free", required=False)
 
 class RicettaForm(forms.ModelForm):  
     description_create = "Create a new Ricetta!"

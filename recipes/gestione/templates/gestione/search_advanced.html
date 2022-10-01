@@ -8,8 +8,36 @@
 
 {% block ricerca %} 
     <form action="{% url 'search' %}" method="POST">{% csrf_token %}
-        {{form|crispy}}
-    <input type="submit" value="Search" name='q'> </form>
+        <div class="form-row">
+            <div class="form-group col-md-4 mb-0">
+              {{ form.nome|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-2 mb-0">
+                {{ form.difficolta|as_crispy_field }}
+              </div>
+            <div class="form-group col-md-2 mb-0">
+                {{ form.portata|as_crispy_field }}
+              </div>
+            <div class="form-group col-md-2 mb-0">
+                {{ form.costo_max|as_crispy_field }}
+              </div>
+            <div class="form-group col-md-2 mb-0">
+              {{ form.t_prep|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="horizontalgap" style="width:120px">
+                {{ form.is_vegetarian|as_crispy_field }}
+            </div>
+            <div class="horizontalgap" style="width:100px">
+                {{ form.is_vegan|as_crispy_field }}
+            </div>
+            <div class="horizontalgap" style="width:200px">
+                {{ form.is_gluten_free|as_crispy_field }}
+            </div>
+        </div>
+        <input type="submit" value="Search" name='q'> 
+    </form>
 {% endblock %}
 
     

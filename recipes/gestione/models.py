@@ -24,7 +24,7 @@ class Ricetta(models.Model):
     vegano = models.BooleanField(default = False)
     gluten_free = models.BooleanField(default = False)
     immagine = models.ImageField(null=True, blank=True)
-    utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None, related_name = "non_so_cosa_vada")
+    utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None)
 
     def __str__(self):
         out = self.nome

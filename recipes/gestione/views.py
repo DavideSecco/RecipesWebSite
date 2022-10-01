@@ -160,6 +160,7 @@ def ricetta_delete_view(request, pk):
     }
     return render (request, "gestione/cancella_ricetta.html", context=context)
 
+
 # RICERCA E RISULTATI RICERCA
 # https://www.youtube.com/watch?v=G-Rct7Na0UQ
 # https://www.youtube.com/watch?v=vU0VeFN-abU
@@ -170,19 +171,47 @@ def search_advanced(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
-            nome_query          = form.cleaned_data.get("nome" or None)
-            t_prep_query        = form.cleaned_data.get("t_prep")
-            is_vegetarian_query = form.cleaned_data.get("is_vegetarian")
-        
+            nome_query           = form.cleaned_data.get("nome" or None)
+            difficolta_query     = form.cleaned_data.get("difficolta" or None)
+            portata_query        = form.cleaned_data.get("portata")
+            costo_max_query      = form.cleaned_data.get("costo_max")
+            t_prep_query         = form.cleaned_data.get("t_prep")
+            is_vegetarian_query  = form.cleaned_data.get("is_vegetarian")
+            is_vegan_query       = form.cleaned_data.get("is_vegan")
+            is_gluten_free_query = form.cleaned_data.get("is_gluten_free")
+
+            # Nome
             if nome_query != '' and nome_query is not None:
                 qs = qs.filter(nome__icontains = nome_query)
 
+            # difficoltá
+            if difficolta_query != "0" and difficolta_query is not None:
+                qs = qs.filter(difficoltá__icontains = difficolta_query)
+
+            # portata
+            if portata_query != "0" and portata_query is not None:
+                qs = qs.filter(portata__icontains = portata_query)
+
+            # Costo max
+            if costo_max_query != '' and costo_max_query is not None:
+                qs = qs.filter(costo__lt = costo_max_query)
+
+            # Tempo preparazione
             if t_prep_query != '' and t_prep_query is not None:
                 qs = qs.filter(tempo_preparazione__lt = t_prep_query)
 
+            # Vegetariano
             if is_vegetarian_query == True:
                 qs = qs.filter(vegetariano = is_vegetarian_query)
+            
+            # Vegano
+            if is_vegan_query == True:
+                qs = qs.filter(vegano = is_vegan_query)
     
+            # Gluten free
+            if is_gluten_free_query == True:
+                qs = qs.filter(gluten_free = is_gluten_free_query)
+
     context = {
         "form" : form,
         "object_list" : qs
