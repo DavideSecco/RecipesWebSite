@@ -23,6 +23,7 @@ urlpatterns = [
     # LISTA RICETTE
     path("lista_ricette/", Lista_ricette_views.as_view(), name="listaricette"),
     path("lista_ricette_private/", views.ListaRicettePrivateViews.as_view(), name="listaricetteprivate"),
+    path("lista_ricetta_preferite/", views.ListaRicettePreferiteViews.as_view(), name="listaricettepreferite"),
 
     # DETAIL RICETTA
     path("ricetta/<ricetta_id>/", views.ricetta_detail_view, name="ricetta"),

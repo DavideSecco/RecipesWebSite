@@ -42,15 +42,15 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
         return Data
 
 
-# DETAIL RICETTA: 
-# def ricetta_detail_view(request, ricetta_id):
-#     ricetta = Ricetta.objects.get(pk=ricetta_id)
-#     ingredienti = Ingredient.objects.filter(ricetta = ricetta_id).values
-#     context = {
-#         'ricetta' : ricetta,
-#         'ingredienti' : ingredienti
-#     }
-#     return render(request, "gestione/ricetta_details.html", context)
+class ListaRicettePreferiteViews(LoginRequiredMixin, ListView):
+    model = Ricetta
+    template_name = "lista_ricette.html"
+
+    def get_queryset(self):
+        ids_ricette_preferite = RicettePreferite.objects.filter(utente = self.request.user).values_list('ricetta')
+        Data = Ricetta.objects.filter(id__in = ids_ricette_preferite)
+        return Data
+
 
 # CREATE & UPDATE: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
 # Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
@@ -207,38 +207,36 @@ def search_advanced(request):
 def ricetta_detail_view(request, ricetta_id):
     ricetta = Ricetta.objects.get(pk=ricetta_id)
     ingredienti = Ingredient.objects.filter(ricetta = ricetta_id).values
-    print("sono nella funzione detail: numero recensioni: " + ricetta.media_recensioni)
+
+    recensioni_della_ricetta = Recensione.objects.filter(ricetta = ricetta)
+    numero_recensioni = recensioni_della_ricetta.exclude(punteggio=0).count()
+    somma_punteggi = 0
+    for recensione in recensioni_della_ricetta:
+        if recensione.punteggio != "-":
+            somma_punteggi = somma_punteggi + recensione.punteggio
+    
+    if numero_recensioni != 0: 
+        media_recensioni = somma_punteggi / numero_recensioni
+    else:
+        media_recensioni = 0
+
 
     try:
         recensione = Recensione.objects.get(utente = request.user.id, ricetta__id = ricetta_id)
-        # recensione = get_object_or_404(Recensione, utente = request.user.id, ricetta__id = ricetta_id)
         form = RecensioneForm(request.POST or None, instance=recensione)
-        print("METEDO GET:")
-        print("GET recensione.utente = " + str(recensione.utente) + " recensione.ricetta = " + str(recensione.ricetta) + " recensione.punteggio " + str(recensione.punteggio))
-        print("GET form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
     except Recensione.DoesNotExist:
-        print("LA RECENSIONE NON ESISTE")
         form = RecensioneForm(request.POST or None, request.FILES  or None)
 
     if request.method == "POST":
         try:
             recensione = Recensione.objects.get(utente = request.user.id, ricetta__id = ricetta_id)
-            print("METEDO POST PRIMA DI VALIDAZIONE:")
-            print("POST recensione.utente = " + str(recensione.utente) + " recensione.ricetta = " + str(recensione.ricetta) + " recensione.punteggio " + str(recensione.punteggio))
-            print("POST form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
             if form.is_valid():
-                print("METODO POST: form valido")
                 form.save()
-                print("POST DOPO VALIDAZIONE form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
-                # messages.success(request, "Grazie, la tua ricetta é stata aggiornata")
-                print("Grazie, la tua ricetta é stata aggiornata. Il punteggio é: "+ str(recensione.punteggio))
                 return redirect("ricetta", ricetta_id = ricetta_id)
             else: 
                 print("Form non é diventato valido dopo aggiornamento del punteggio")
         except Recensione.DoesNotExist:
             if form.is_valid():
-                print("METODO POST: CREAZIONE RECENSIONE: nel form é stato inserito il punteggio (instance): " +  str(form.instance.punteggio))
-                print("METODO POST: CREAZIONE RECENSIONE: nel form é stato inserito il punteggio (cleaned_data): " +  str(form.cleaned_data['punteggio']))
                 data = Recensione()
                 data.punteggio = form.instance.punteggio
                 print("METODO POST: CREAZIONE RECENSIONE: salvo in recensione (instance): " +  str(data.punteggio))
@@ -247,17 +245,29 @@ def ricetta_detail_view(request, ricetta_id):
                 data.ricetta_id = ricetta_id
                 data.utente = request.user
                 data.save()
-                # messages.success(request, "Grazie, la tua ricetta é stata salvata")
-                print("Grazie, la tua ricetta é stata salvata Il punteggio é: "+ str(data.punteggio))
                 return redirect("ricetta", ricetta_id = ricetta_id)
             else:
                 print("il form non è valido")
+
+
+    if request.method == 'GET':
+        if 'Aggiungi ai preferiti' in request.GET:
+            try:
+                ricetta_preferita = RicettePreferite.objects.get(utente = request.user, ricetta = ricetta)
+                print("Questa ricetta era giá nei preferiti")
+            except RicettePreferite.DoesNotExist:
+                ricetta_preferita = RicettePreferite(utente = request.user, ricetta = ricetta)
+                ricetta_preferita.save()
+                print("Dovrei aver salvato la ricetta preferita")
+                
+            print(RicettePreferite.objects.all().count())
     
-    print("carico il context, in particolare la valutazione" + str(form.instance.punteggio))
     context = {
         'ricetta' : ricetta,
         'ingredienti' : ingredienti,
-        "form" : form
+        "form" : form,
+        "media_recensioni" : media_recensioni,
+        "numero_recensioni" : numero_recensioni
     }
     return render(request, "gestione/ricetta_details.html", context)
 

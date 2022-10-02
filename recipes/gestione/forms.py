@@ -35,7 +35,7 @@ class IngredientForm(forms.ModelForm):
         model = Ingredient
         exclude = ('ricetta',)
 
-PUNTEGGIO_CHOICES = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
+PUNTEGGIO_CHOICES = ((0, "-"), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
 
 class RecensioneForm(forms.ModelForm):
     punteggio = forms.ChoiceField(required=False, choices=PUNTEGGIO_CHOICES)
