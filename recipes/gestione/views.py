@@ -18,6 +18,7 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound
+from django.contrib import messages
 
 
 # Create your views here.
@@ -260,6 +261,7 @@ def ricetta_detail_view(request, ricetta_id):
                 ricetta_preferita.save()
                 print("Dovrei aver salvato la ricetta preferita")
                 
+            messages.success(request, "Ricetta aggiunta ai preferiti")
             print(RicettePreferite.objects.all().count())
     
     context = {
