@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block head %}
+<head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" 
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href='{% static "/css/style.css" %}'>
+    <link rel="stylesheet" type="text/css" href='{% static "/css/custom.css" %}'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% endblock %}
 
-    <h1> {{ricetta.nome}} </h1>
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class = myclass>
+        <form action="{% url 'ricetta' ricetta.id %}" method="POST" enctype = "multipart/form-data" >  {% csrf_token %}
+            {{ form }} 
+            <input type="submit" value="submit review" class="btn btn-primary">
+        </form>
+    </div>
+    <div class = myclass2>
+        <h1> {{ricetta.nome}} </h1>
+    </div>
+    <br> <br> <br>
+<div>
     {% if ricetta.immagine %}
         {% load static %}<img src="{% static ricetta.immagine.url %}" width="500" height="300" align=right Hspace="15" Vspace="0" Border="0">
-    {% endif %}    
+    {% endif %}
     <ul>
         <li> Difficoltá: {{ ricetta.get_difficoltá_display }} </li>
         <li> Portata: {{ ricetta.get_portata_display }} </li>
@@ -15,6 +39,8 @@
         <li> Porzioni: {{ ricetta.porzioni }} </li>
         <li> Autore: {{ ricetta.utente }} </li>
     </ul>
+      
+</div>
     {% if ricetta.vegetariano %}
         <img src={% static "static/img/vetarian_simbol.png" %} width="80" height="80" Hspace="15" Vspace="0" Border="0">        
     {% endif %}
@@ -40,5 +66,6 @@
         <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato </a>
         <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
     {% endif %}
-
+    <br> <br> 
+   
 {% endblock %}

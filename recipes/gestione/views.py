@@ -3,6 +3,7 @@ from gc import get_objects
 from http.client import HTTPResponse
 from multiprocessing import context
 from pickle import TRUE
+from pyexpat.errors import messages
 # from typing_extensions import Required
 from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
@@ -42,14 +43,14 @@ class ListaRicettePrivateViews(LoginRequiredMixin, ListView):
 
 
 # DETAIL RICETTA: 
-def ricetta_detail_view(request, pk):
-    ricetta = Ricetta.objects.get(pk=pk)
-    ingredienti = Ingredient.objects.filter(ricetta = pk).values
-    context = {
-        'ricetta' : ricetta,
-        'ingredienti' : ingredienti
-    }
-    return render(request, "gestione/ricetta_details.html", context)
+# def ricetta_detail_view(request, ricetta_id):
+#     ricetta = Ricetta.objects.get(pk=ricetta_id)
+#     ingredienti = Ingredient.objects.filter(ricetta = ricetta_id).values
+#     context = {
+#         'ricetta' : ricetta,
+#         'ingredienti' : ingredienti
+#     }
+#     return render(request, "gestione/ricetta_details.html", context)
 
 # CREATE & UPDATE: https://www.youtube.com/watch?v=PICYTJqj__o&t=16s
 # Per aggiungere ingredienti dinamicamente a una ricetta: https://www.youtube.com/watch?v=JIvJL1HizP4
@@ -108,32 +109,14 @@ def ricetta_update_view(request, pk=None):
                     for field in form.fields.values():
                         field.required = False
                         
-                
-                """
-                Siccome dal ciclo sopra abbiamo redo tutti i campi non obbligatori il parametro extra=1 ogni volta
-                aggiunge un form anche se quelli precendenti sono vuoti.
-                Per questo dopo aver controllato che il formset sia valido, controllo che tutti i forms siano stati
-                compilati senza quindi far si che ogni volta che si salva venga creato un form nuovo in piú
-                """
-                # la funzione é scritta molto male, ma non so come fare in modo pythonico
-                # https://stackoverflow.com/questions/31849379/deleting-form-from-django-formset --> non c'é modo di eliminare un form da formset
-                #b = True
                 if formset.is_valid() :
-                    # print("Il formset é valido")
-                    # if formset.has_changed():
-                    #     formset.save()
-                    # for form in formset:
-                    #     if form.cleaned_data['nome'] == None and form.cleaned_data['quantitá'] == None:
-                    #         #form.delete()
-                    #         b = False
-                    # if b == True:
-                        formset.save()
+                    formset.save()
                 else: 
                     print("il formset NON é valido: " + formset.errors)
 
                 return redirect('updatericettaavanzato', pk = ricetta.id)
         else: 
-            return redirect('ricetta', pk = ricetta.id)
+            return redirect('ricetta', ricetta_id = ricetta.id)
     
     if request.method == "GET":
         formset = IngredientFormSet(instance=ricetta)
@@ -218,3 +201,65 @@ def search_advanced(request):
     }
 
     return render (request, "gestione/search_advanced.html", context=context)
+
+
+# DETAIL RICETTA: 
+def ricetta_detail_view(request, ricetta_id):
+    ricetta = Ricetta.objects.get(pk=ricetta_id)
+    ingredienti = Ingredient.objects.filter(ricetta = ricetta_id).values
+    print("sono nella funzione detail: numero recensioni: " + ricetta.media_recensioni)
+
+    try:
+        recensione = Recensione.objects.get(utente = request.user.id, ricetta__id = ricetta_id)
+        # recensione = get_object_or_404(Recensione, utente = request.user.id, ricetta__id = ricetta_id)
+        form = RecensioneForm(request.POST or None, instance=recensione)
+        print("METEDO GET:")
+        print("GET recensione.utente = " + str(recensione.utente) + " recensione.ricetta = " + str(recensione.ricetta) + " recensione.punteggio " + str(recensione.punteggio))
+        print("GET form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
+    except Recensione.DoesNotExist:
+        print("LA RECENSIONE NON ESISTE")
+        form = RecensioneForm(request.POST or None, request.FILES  or None)
+
+    if request.method == "POST":
+        try:
+            recensione = Recensione.objects.get(utente = request.user.id, ricetta__id = ricetta_id)
+            print("METEDO POST PRIMA DI VALIDAZIONE:")
+            print("POST recensione.utente = " + str(recensione.utente) + " recensione.ricetta = " + str(recensione.ricetta) + " recensione.punteggio " + str(recensione.punteggio))
+            print("POST form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
+            if form.is_valid():
+                print("METODO POST: form valido")
+                form.save()
+                print("POST DOPO VALIDAZIONE form.instance.utente = " + str(form.instance.utente ) + " recensione.ricetta = " + str(form.instance.ricetta) + " recensione.punteggio " + str(form.instance.punteggio))
+                # messages.success(request, "Grazie, la tua ricetta é stata aggiornata")
+                print("Grazie, la tua ricetta é stata aggiornata. Il punteggio é: "+ str(recensione.punteggio))
+                return redirect("ricetta", ricetta_id = ricetta_id)
+            else: 
+                print("Form non é diventato valido dopo aggiornamento del punteggio")
+        except Recensione.DoesNotExist:
+            if form.is_valid():
+                print("METODO POST: CREAZIONE RECENSIONE: nel form é stato inserito il punteggio (instance): " +  str(form.instance.punteggio))
+                print("METODO POST: CREAZIONE RECENSIONE: nel form é stato inserito il punteggio (cleaned_data): " +  str(form.cleaned_data['punteggio']))
+                data = Recensione()
+                data.punteggio = form.instance.punteggio
+                print("METODO POST: CREAZIONE RECENSIONE: salvo in recensione (instance): " +  str(data.punteggio))
+                data.punteggio = form.cleaned_data['punteggio']
+                print("METODO POST: CREAZIONE RECENSIONE: salvo in recensione (cleaned_data): " +  str(data.punteggio))
+                data.ricetta_id = ricetta_id
+                data.utente = request.user
+                data.save()
+                # messages.success(request, "Grazie, la tua ricetta é stata salvata")
+                print("Grazie, la tua ricetta é stata salvata Il punteggio é: "+ str(data.punteggio))
+                return redirect("ricetta", ricetta_id = ricetta_id)
+            else:
+                print("il form non è valido")
+    
+    print("carico il context, in particolare la valutazione" + str(form.instance.punteggio))
+    context = {
+        'ricetta' : ricetta,
+        'ingredienti' : ingredienti,
+        "form" : form
+    }
+    return render(request, "gestione/ricetta_details.html", context)
+
+
+

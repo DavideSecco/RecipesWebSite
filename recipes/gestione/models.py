@@ -35,6 +35,9 @@ class Ricetta(models.Model):
             return None
         else:
             return self.utente.username
+
+    def get_media_recensioni(self):
+        return self.recensione.count()
             
     class Meta:
         verbose_name_plural = "Ricette"
@@ -55,6 +58,18 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name_plural = "Ingredienti"
 
+PUNTEGGIO_CHOICES = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
+
+class Recensione(models.Model):
+    punteggio = models.IntegerField(default="1", choices=PUNTEGGIO_CHOICES)
+    ricetta = models.ForeignKey(Ricetta, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None)
+
+    def __str__(self):
+        return ("Recensione ricetta: " + str(self.ricetta) + " scritta da utente "+ str(self.utente))
+
+    class Meta:
+        verbose_name_plural = "Recensioni"
 
 
     

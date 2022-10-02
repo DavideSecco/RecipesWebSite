@@ -34,3 +34,12 @@ class IngredientForm(forms.ModelForm):
     class Meta:
         model = Ingredient
         exclude = ('ricetta',)
+
+PUNTEGGIO_CHOICES = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
+
+class RecensioneForm(forms.ModelForm):
+    punteggio = forms.ChoiceField(required=False, choices=PUNTEGGIO_CHOICES)
+
+    class Meta:
+        model = Recensione
+        exclude = ("utente", 'ricetta')
