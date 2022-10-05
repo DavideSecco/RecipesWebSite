@@ -19,6 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
+from itertools import chain
 
 
 # Create your views here.
@@ -149,8 +150,12 @@ def ricetta_delete_view(request, pk):
 # https://www.youtube.com/watch?v=G-Rct7Na0UQ
 # https://www.youtube.com/watch?v=vU0VeFN-abU
 def search_advanced(request):
-    form = SearchForm()   
-    qs = Ricetta.objects.all()
+    form = SearchForm()
+
+    if request.user.is_authenticated:
+        qs = reccomendation_system(request)
+    else:
+        qs = Ricetta.objects.all()
 
     if request.method == "POST":
         form = SearchForm(request.POST)
@@ -273,5 +278,48 @@ def ricetta_detail_view(request, ricetta_id):
     }
     return render(request, "gestione/ricetta_details.html", context)
 
+"""
+la funzione é divisa in due parti:
+1) calcolo quante ricette, divise per difficoltá ha scritto l'utente
+2) Ordino tutte le ricette che ho nel db in base alla difficoltá piú frequente delle ricette dell'utente
+"""
+def reccomendation_system(request):
+    ricette_utente = Ricetta.objects.filter(utente=request.user)
+    print("Ho trovato " + str(ricette_utente.count()) + " ricetta/e di questo utente")
 
+    bassa = media = alta = 0
+    for ricetta in ricette_utente:
+        difficolta = ricetta.difficoltá
+        print(difficolta)
+        if difficolta == "Bassa":
+            bassa += 1
+        elif difficolta == "Media":
+            media += 1
+        elif difficolta == "Alta":
+            alta += 1
+
+    difficulty_dict = {"Bassa": bassa, "Media": media, "Alta": alta}
+    difficulty_dict_sorted = dict(reversed(sorted(difficulty_dict.items(), key=lambda item: item[1])))
+
+    print("Ricette fatte da questo utente per difficoltá: " + str(difficulty_dict))
+    print("Ricette fatte da questo utente per difficoltá ORDINATE DECRESCENTEMENTE: " + str(difficulty_dict_sorted))
+
+    # metto le difficoltá ordinate in una lista per comoditá
+    difficulty_list_ordered = list(difficulty_dict_sorted.keys())
+
+
+    ##### Lavoro sul queryset ########
+    ricette = Ricetta.objects.all()
+    print("Numero elementi nel queryset: " + str(ricette.count()))
+
+    qs0 = ricette.filter(difficoltá__icontains = str(difficulty_list_ordered[0]))
+    print("Numero elementi nel primo queryset " + str(qs0.count()))
+
+    qs1 = ricette.filter(difficoltá__icontains=str(difficulty_list_ordered[1]))
+    print("Numero elementi nel secondo queryset " + str(qs1.count()))
+
+    qs2 = ricette.filter(difficoltá__icontains=str(difficulty_list_ordered[2]))
+    print("Numero elementi nel terzo queryset " + str(qs2.count()))
+
+    return list(chain(qs0, qs1, qs2))
 

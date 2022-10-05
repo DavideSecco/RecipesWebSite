@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-DIFFICOLTA_CHOICES = (("1", "Bassa"), ("2","Media"), ("3","Alta"))
+DIFFICOLTA_CHOICES = (("0", ""), ("Bassa", "Bassa"), ("Media","Media"), ("Alta","Alta"))
+# DIFFICOLTA_CHOICES = (("1", "Bassa"), ("2","Media"), ("3","Alta"))
 
 PORTATA_CHOICES = (("1", "Antipasto"), ("2", "Primo"), ("3", "Secondo"), ("4", "Dolce"))
 
@@ -50,7 +51,9 @@ class Ingredient(models.Model):
     ricetta = models.ForeignKey(Ricetta, on_delete=models.CASCADE, related_name="ingredients")
 
     def __str__(self):
-        return self.nome
+        if self.nome == None:
+            return "ingrediente senza nome"
+        return self.nome 
 
     class Meta:
         verbose_name_plural = "Ingredienti"
@@ -74,6 +77,8 @@ class RicettePreferite(models.Model):
 
     def __str__(self):
         return ("Aggiunto " + str(self.ricetta) + " ai preferiti di "+ str(self.utente))
+
+
 
 
     

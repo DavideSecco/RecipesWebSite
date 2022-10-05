@@ -6,25 +6,29 @@
 
 {% block content %}
 
-    {% for ricetta in object_list %}
-        <ul>
-            <articole>
-                <hr>
-                <a href="{% url 'ricetta' ricetta.id %}"> 
-                    {% if ricetta.immagine %}
-                        {% load static %}<img src="{% static ricetta.immagine.url %}" width="200" height="120" align=right Hspace="15" Vspace="0" Border="0">
-                    {% endif %}                    
-                    <h2> {{ ricetta }} </h2> 
-                    <ul>
-                        <li> Difficoltà: {{ ricetta.get_difficoltá_display }}</li>
-                        <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
-                        <li> Proprietario: {{ ricetta.utente }} </li>
-                        <li> Vegetariano: {{ ricetta.vegetariano }} </li>
-                    </ul>
-                </a> 
-            </articole>
-        </ul>
-    {% endfor %}
+    {% if object_list %}
+        {% for ricetta in object_list %}
+            <ul>
+                <articole>
+                    <hr>
+                    <a href="{% url 'ricetta' ricetta.id %}"> 
+                        {% if ricetta.immagine %}
+                            {% load static %}<img src="{% static ricetta.immagine.url %}" width="200" height="120" align=right Hspace="15" Vspace="0" Border="0">
+                        {% endif %}                    
+                        <h2> {{ ricetta }} </h2> 
+                        <ul>
+                            <li> Difficoltà: {{ ricetta.get_difficoltá_display }}</li>
+                            <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
+                            <li> Autore della ricetta: {{ ricetta.utente }} </li>
+                            <li> Vegetariano: {{ ricetta.vegetariano }} </li>
+                        </ul>
+                    </a> 
+                </articole>
+            </ul>
+        {% endfor %}
+    {% else %}
+        Non ci sono ricette in questa categoria
+    {% endif %}
     
     <!-- <p> il numero totale di ricette é {{ view.get_totale_ricette }} </p> -->
 

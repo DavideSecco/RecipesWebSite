@@ -7,7 +7,8 @@ from django.forms import formset_factory
 from django.forms import BaseInlineFormSet
 from django.forms import BaseFormSet
 
-DIFFICOLTA_CHOICES = (("0", ""), ("1", "Bassa"), ("2","Media"), ("3","Alta"))
+DIFFICOLTA_CHOICES = (("0", ""), ("Bassa", "Bassa"), ("Media","Media"), ("Alta","Alta"))
+# DIFFICOLTA_CHOICES = (("0", ""), ("1", "Bassa"), ("2","Media"), ("3","Alta"))
 
 PORTATA_CHOICES = (("0", ""), ("1", "Antipasto"), ("2", "Primo"), ("3", "Secondo"), ("4", "Dolce"))
 
