@@ -16,13 +16,15 @@
 
 {% block content %}
     <div class = myclass>
-        <form action="{% url 'ricetta' ricetta.id %}" method="POST" enctype = "multipart/form-data" >  {% csrf_token %}
-            {% for field in form %}
-                {{ field.errors }}
-                Dai un voto alla ricetta:  {{ field }}
-            {% endfor %}
-            <input type="submit" value="Valuta" class="btn btn-primary">
-        </form>
+        {% if user.is_authenticated %}
+            <form action="{% url 'ricetta' ricetta.id %}" method="POST" enctype = "multipart/form-data" >  {% csrf_token %}
+                {% for field in form %}
+                    {{ field.errors }}
+                    Dai un voto alla ricetta:  {{ field }}
+                {% endfor %}
+                <input type="submit" value="Valuta" class="btn btn-primary">
+            </form>
+        {% endif %}
     </div>
     <div class = myclass2>
         <h1> {{ricetta.nome}} </h1>

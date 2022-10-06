@@ -1,4 +1,4 @@
-from audioop import reverse
+from django.urls import reverse
 from gc import get_objects
 from http.client import HTTPResponse
 from multiprocessing import context
