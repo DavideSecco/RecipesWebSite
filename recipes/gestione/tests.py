@@ -5,6 +5,10 @@ from django.urls import reverse
 
 # Create your tests here.
 
+##### funzioni di servizio #####
+def create_ricetta(nome):
+    return Ricetta.objects.create(nome=nome)
+
 # teestare il comportamento della view "lista ricette" se non ci sono ricette
 class ListViewTests(TestCase):
     def test_lista_ricette_with_no_ricette(self):
@@ -25,7 +29,12 @@ class ListViewTests(TestCase):
         """
 
         # creo una ricetta
-
+        r1 = create_ricetta("Ricetta 1")
 
         response = self.client.get(reverse("listaricette"))
         self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context["object_list"], [r1])
+
+
+
+
