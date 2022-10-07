@@ -1,11 +1,6 @@
 from django.urls import reverse
-from gc import get_objects
-from http.client import HTTPResponse
-from multiprocessing import context
-from pickle import TRUE
+
 from pyexpat.errors import messages
-# from typing_extensions import Required
-from urllib import request
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 
@@ -16,8 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import modelformset_factory, inlineformset_factory
 from .models import *
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.http import HttpResponse, HttpResponseNotFound
 from django.contrib import messages
 from itertools import chain
 
