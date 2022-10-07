@@ -8,7 +8,7 @@ Requisiti:
 
 ### Installazione
 
-`git clone [https://github.com/DavideSecco/RecipesWebSite](https://github.com/DavideSecco/RecipesWebSite)`
+`git clone https://github.com/DavideSecco/RecipesWebSite](https://github.com/DavideSecco/RecipesWebSite`
 
 `cd RecipesWebSite`
 
@@ -22,6 +22,6 @@ Requisiti:
 
 `python -m pip install Pillow`
 
-`python [manage.py](http://manage.py) runserver`
+`python manage.py runserver`
 
 Collegarsi poi all’indirizzo: 127.0.0.1:8000
