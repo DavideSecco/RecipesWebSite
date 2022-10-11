@@ -104,7 +104,7 @@ def ricetta_update_view(request, pk=None):
                     for field in form.fields.values():
                         field.required = False
                         
-                if formset.is_valid() :
+                if formset.is_valid():
                     formset.save()
                 else: 
                     print("il formset NON é valido: " + formset.errors)

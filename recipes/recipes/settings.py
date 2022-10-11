@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "gestione",
     "crispy_forms",
     'django_cleanup.apps.CleanupConfig', 
+    'django_extensions',
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"

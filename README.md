@@ -22,6 +22,10 @@ Requisiti:
 
 `python -m pip install Pillow`
 
+`pip install django-extensions`
+
+`pip install pydotplus`
+
 `python manage.py runserver`
 
 Collegarsi poi all’indirizzo: 127.0.0.1:8000
