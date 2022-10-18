@@ -55,7 +55,7 @@ def ricetta_create_view(request):
     IngredientFormSet = inlineformset_factory(Ricetta, Ingredient, fields=("nome", "quantitá", "unita_di_misura"), extra=1)
 
     if request.method == "POST":
-        if 'save' in request.POST:
+        if 'save' or 'aggiungi_ingrediente' in request.POST:
             if form.is_valid():
                 obj = form.save(commit = False)
                 obj.utente = request.user
@@ -67,6 +67,8 @@ def ricetta_create_view(request):
             print("Ho eseguito il metodo post")
             # return redirect('listaricette')
             return redirect('updatericettaavanzato', pk = obj.id)
+        elif 'back' in request.POST:
+            return redirect('listaricette')
         else:
             return redirect('listaricette')
     
@@ -92,8 +94,9 @@ def ricetta_update_view(request, pk=None):
                         extra=1, can_delete=True, can_delete_extra=True, validate_max=0)
     
     if request.method == "POST":
-        # Premo su pulsante save
-        if 'save' in request.POST:
+        print("metodo post")
+        if 'save' or 'aggiungi_ingrediente' in request.POST:
+            print("hai premuto save o aggiugi ingrediente")
             if form.is_valid:
                 form.save()
                 formset = IngredientFormSet(request.POST or None, instance=ricetta)
@@ -110,8 +113,9 @@ def ricetta_update_view(request, pk=None):
                     print("il formset NON é valido: " + formset.errors)
 
                 return redirect('updatericettaavanzato', pk = ricetta.id)
-        else: 
-            return redirect('ricetta', ricetta_id = ricetta.id)
+        else:
+            print("Sono nell'else")
+            return redirect('ricetta', ricetta_id=ricetta.id)
     
     if request.method == "GET":
         formset = IngredientFormSet(instance=ricetta)

@@ -16,6 +16,9 @@
         {% endfor %}
         <br>
         <input type="submit" name="save" value="Modifica e salva">
-        <input type="submit" name="back" value="Torna indietro">
+        <input type="submit" name="aggiungi_ingrediente" value="Aggiungi ingrediente">
     </form>
+    <a href="{% url 'listaricette' %}">
+        <input type="submit" name="back" value="Torna a tutte le ricette">
+    </a>
 {% endblock %}

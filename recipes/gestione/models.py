@@ -25,7 +25,8 @@ class Ricetta(models.Model):
     vegano = models.BooleanField(default = False)
     gluten_free = models.BooleanField(default = False)
     immagine = models.ImageField(null=True, blank=True)
-    utente = models.ForeignKey(User, on_delete = models.CASCADE, blank=True, null=True, default=None)
+    procedimento = models.TextField(null=True, blank=True)
+    utente = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     def __str__(self):
         out = self.nome
@@ -41,7 +42,7 @@ class Ricetta(models.Model):
         verbose_name_plural = "Ricette"
 
 
-UNITA_DI_MISURA_CHOICES = (("1", "grammi"), ("2", "unitá"), ("3", "ml"))
+UNITA_DI_MISURA_CHOICES = (("grammi", "grammi"), ("unitá", "unitá"), ("ml", "ml"))
 
 class Ingredient(models.Model):
     nome = models.CharField(max_length=50, default=None, null=True)
