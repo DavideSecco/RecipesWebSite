@@ -20,7 +20,11 @@
                             <li> Difficoltà: {{ ricetta.get_difficoltá_display }}</li>
                             <li> Tempo di Realizzazione: {{ ricetta.tempo_preparazione }} min </li>
                             <li> Autore della ricetta: {{ ricetta.utente }} </li>
-                            <li> Vegetariano: {{ ricetta.vegetariano }} </li>
+                            <li> Vegetariano:
+                                {% if ricetta.vegetariano %} Si
+                                {% else %} No
+                                {% endif %}
+                            </li>
                         </ul>
                     </a> 
                 </articole>

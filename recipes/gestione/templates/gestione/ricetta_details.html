@@ -75,7 +75,7 @@
 
     <br> <br>
     {% if user.username  == ricetta.utente.username %}
-        <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta Avanzato </a>
+        <a href="{% url 'updatericettaavanzato' ricetta.id %}" class="btn btn-primary"> Modifica Ricetta </a>
         <a href="{% url 'deletericetta' ricetta.id %}" class="btn btn-danger"> Cancella Ricetta </a>
     {% endif %}
     <br> <br> 

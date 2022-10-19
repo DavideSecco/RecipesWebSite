@@ -15,10 +15,12 @@
             {{ form.as_table }} <br> <br>
         {% endfor %}
         <br>
-        <input type="submit" name="save" value="Modifica e salva">
-        <input type="submit" name="aggiungi_ingrediente" value="Aggiungi ingrediente">
+        <input type="submit" class="btn btn-success" name="aggiungi_ingrediente" value="Aggiungi ingrediente">
+        <input type="submit" class="btn btn-primary" name="save" value="Modifica e salva">
     </form>
+    <br>
+
     <a href="{% url 'listaricette' %}">
-        <input type="submit" name="back" value="Torna a tutte le ricette">
+        <input type="submit" class="btn btn-warning" name="back" value="Torna a tutte le ricette">
     </a>
 {% endblock %}
